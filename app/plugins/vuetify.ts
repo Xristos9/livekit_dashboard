@@ -3,7 +3,6 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import VueApexCharts from 'vue3-apexcharts';
-import VueTablerIcons from 'vue-tabler-icons';
 import '@mdi/font/css/materialdesignicons.css';
 import '@/scss/style.scss';
 import {
@@ -33,7 +32,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
   });
   nuxtApp.vueApp.use(vuetify);
-  nuxtApp.vueApp.use(VueApexCharts);
-  nuxtApp.vueApp.use(VueTablerIcons);
+  // Register ApexCharts component globally to avoid plugin type issues
+  nuxtApp.vueApp.component('apexchart', VueApexCharts);
 });
 
