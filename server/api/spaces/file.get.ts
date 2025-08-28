@@ -3,6 +3,7 @@ import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getS3Client } from "../../utils/s3";
 
 export default defineEventHandler(async (event: H3Event) => {
+  try {
   const q = getQuery(event);
   const key = typeof q.key === "string" ? q.key : null;
   const download = q.download === "1" || q.download === "true";
@@ -17,7 +18,7 @@ export default defineEventHandler(async (event: H3Event) => {
       statusMessage: "Bucket not configured",
     });
 
-  const s3 = getS3Client();
+    const s3 = getS3Client();
 
   // Fetch object from Spaces
   const out = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
@@ -39,4 +40,11 @@ export default defineEventHandler(async (event: H3Event) => {
   // Stream body to client
   // @ts-ignore Body is a web/Node stream
   return out.Body;
+  } catch (error: any) {
+    console.error('[spaces/file] Error:', error);
+    throw createError({
+      statusCode: error.statusCode || 500,
+      statusMessage: error.statusMessage || error.message || 'Internal server error'
+    });
+  }
 });

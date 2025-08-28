@@ -192,6 +192,7 @@ async function tryHead(
 // ----------------------------------------------------------------------------
 
 export default defineEventHandler(async (event: H3Event) => {
+  try {
   // Read & sanitize query params with reasonable bounds/defaults
   const q = getQuery(event);
   const prefix = typeof q.prefix === "string" ? q.prefix : ""; // optional folder filter
@@ -216,7 +217,7 @@ export default defineEventHandler(async (event: H3Event) => {
     });
 
   // Create S3 client for DO Spaces using credentials from runtime config
-  const s3 = getS3Client();
+    const s3 = getS3Client();
 
   // ------------------------------------------------------------------------
   // STEP 1: list objects page‑by‑page, collecting ONLY up to `jsonLimit` JSONs
@@ -467,4 +468,11 @@ export default defineEventHandler(async (event: H3Event) => {
   // pagination (`nextToken`) or a public base URL, consider returning an object
   // that includes those fields.
   return records;
+  } catch (error: any) {
+    console.error('[spaces/list] Error:', error);
+    throw createError({
+      statusCode: error.statusCode || 500,
+      statusMessage: error.statusMessage || error.message || 'Internal server error'
+    });
+  }
 });
