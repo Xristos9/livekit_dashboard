@@ -64,9 +64,6 @@ watch(mdAndDown, (val) => {
             <!---End Single Item-->
           </template>
         </v-list>
-        <div class="pa-4">
-          <LayoutFullVerticalSidebarUpgradeBox />
-        </div>
       </div>
     </div>
   </v-navigation-drawer>
@@ -83,17 +80,8 @@ watch(mdAndDown, (val) => {
         >
           <Menu2Icon size="20" stroke-width="1.5" />
         </v-btn>
-        <!-- Notification -->
-        <LayoutFullVerticalHeaderNotificationDD />
       </div>
       <div>
-        <!-- Upgrade button -->
-        <v-btn
-          class="mr-2 bg-primary"
-          href="https://adminmart.com/product/matdash-vuetify-nuxt-js-admin-template/?ref=56#product-demo-section"
-          target="_blank"
-          >Check Pro Template</v-btn
-        >
         <!-- User Profile -->
         <LayoutFullVerticalHeaderProfileDD />
       </div>

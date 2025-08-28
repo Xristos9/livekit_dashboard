@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Topbar from "~/components/layout/full/Topbar.vue";
 
 const title = ref(
   "Matdash - Nuxt3 Typescript based Free Admin Dashboard Template"
@@ -16,10 +15,9 @@ useHead({
 
 <template>
   <v-locale-provider>
-    <Topbar />
     <v-app>
       <LayoutFullMain />
-      <v-main class="mr-md-4">
+      <v-main>
         <div class="mb-3 hr-layout bg-containerBg">
           <v-container
             fluid
