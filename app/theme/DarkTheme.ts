@@ -24,9 +24,9 @@ const DARK_BLUE_THEME: ThemeTypes = {
     textSecondary: '#AABAC5',
     borderColor: '#29343d', // subtle dark borders
     containerBg: '#1E1E2E', // card/surface backgrounds
-    background: '#121212', // main app background
+    background: '#1f2a3d', // main app background
     hoverColor: '#1F2833', // hover state
-    surface: '#1A1A24', // panels, modals
+    surface: '#1a2537', // panels, modals
     grey100: '#29343d', // flipped roles
     grey200: '#EAEFF4',
     light: '#1C1C26', // alt backgrounds
