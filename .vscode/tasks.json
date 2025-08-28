@@ -1,0 +1,40 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Nuxt: dev",
+            "type": "npm",
+            "script": "dev",
+            "detail": "nuxt dev",
+            "problemMatcher": []
+        },
+        {
+            "label": "Nuxt: dev (inspect)",
+            "type": "shell",
+            "command": "npm run dev -- --inspect=9229",
+            "detail": "Start Nuxt dev server with Node inspector on 9229",
+            "problemMatcher": []
+        },
+        {
+            "label": "Nuxt: build",
+            "type": "npm",
+            "script": "build",
+            "detail": "nuxt build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Nuxt: preview",
+            "type": "npm",
+            "script": "preview",
+            "detail": "nuxt preview",
+            "problemMatcher": []
+        },
+        {
+            "label": "Nuxt: generate",
+            "type": "npm",
+            "script": "generate",
+            "detail": "nuxt generate",
+            "problemMatcher": []
+        }
+    ]
+}

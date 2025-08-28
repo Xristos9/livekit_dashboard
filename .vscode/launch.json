@@ -1,0 +1,45 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Nuxt: Launch dev (inspect)",
+            "type": "pwa-node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "dev",
+                "--",
+                "--inspect=9229"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "autoAttachChildProcesses": true,
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "Nuxt: Attach (9229)",
+            "type": "pwa-node",
+            "request": "attach",
+            "port": 9229,
+            "cwd": "${workspaceFolder}",
+            "autoAttachChildProcesses": true
+        },
+        {
+            "name": "Open Chrome to http://localhost:3000",
+            "type": "pwa-chrome",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Dev + Chrome",
+            "configurations": [
+                "Nuxt: Launch dev (inspect)",
+                "Open Chrome to http://localhost:3000"
+            ]
+        }
+    ]
+}

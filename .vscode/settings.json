@@ -1,0 +1,71 @@
+{
+  // Hide heavy folders from the Explorer
+  "files.exclude": {
+    "**/.nuxt": true,
+    "**/.output": true,
+    "**/.nitro": true,
+    "**/.vercel": true,
+    "**/.cache": true,
+    "**/.turbo": true,
+    "**/node_modules": true
+  },
+  // Exclude from search as well
+  "search.exclude": {
+    "**/.nuxt": true,
+    "**/.output": true,
+    "**/.nitro": true,
+    "**/.vercel": true,
+    "**/.cache": true,
+    "**/.turbo": true,
+    "**/node_modules": true
+  },
+  // Formatting + quick fixes
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.trimAutoWhitespace": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  // Prettier everywhere
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // ESLint integration
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
+  // Tailwind IntelliSense
+  "tailwindCSS.emmetCompletions": true,
+  "tailwindCSS.includeLanguages": {
+    "vue": "html"
+  },
+  // Silence @tailwind/@apply unknown-at-rule warnings
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  // Use workspace TS for better Vue/TS support
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "vue.server.hybridMode": true,
+  // Consistent newlines
+  "files.eol": "\n",
+  // Optional: auto attach debugger to Nitro/Node processes
+  "debug.javascript.autoAttachFilter": "smart",
+  "debug.javascript.autoAttachSmartPattern": ["**/node_modules/**", "!**/node_modules/nuxt/**"],
+  "prettier.configPath": ".prettierrc.json",
+  "cSpell.words": [
+    "Nuxt",
+    "vuetify"
+  ]
+}
