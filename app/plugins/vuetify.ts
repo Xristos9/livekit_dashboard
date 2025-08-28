@@ -8,6 +8,9 @@ import '@/scss/style.scss';
 import {
   BLUE_THEME,
 } from "@/theme/LightTheme";
+import {
+  DARK_BLUE_THEME,
+} from "@/theme/DarkTheme";
 export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
     components,
@@ -16,6 +19,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       defaultTheme: "BLUE_THEME",
       themes: {
         BLUE_THEME,
+        DARK_BLUE_THEME,
       },
     },
     defaults: {

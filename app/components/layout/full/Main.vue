@@ -84,6 +84,8 @@ watch(mdAndDown, (val) => {
       <div>
         <!-- User Profile -->
         <LayoutFullVerticalHeaderProfileDD />
+        <!-- Theme Toggle -->
+        <LayoutFullVerticalHeaderThemeToggle />
       </div>
     </div>
   </v-app-bar>
