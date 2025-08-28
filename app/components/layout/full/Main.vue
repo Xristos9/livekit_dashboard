@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, shallowRef, watch } from 'vue';
+defineOptions({ name: 'MainLayout' });
 import { useDisplay } from "vuetify";
 import sidebarItems from "@/components/layout/full/vertical-sidebar/sidebarItem";
 import { Menu2Icon } from "vue-tabler-icons";
@@ -33,7 +34,7 @@ watch(mdAndDown, (val) => {
     <!---Navigation -->
     <!-- ---------------------------------------------- -->
     <div>
-      <perfect-scrollbar class="scrollnavbar">
+      <div class="scrollnavbar">
         <v-list class="pa-6 pt-0">
           <!---Menu Loop -->
           <template v-for="(item, i) in sidebarMenu">
@@ -49,6 +50,7 @@ watch(mdAndDown, (val) => {
               class="leftPadding"
               :item="item"
               :level="0"
+              :key="`collapse-${i}`"
               v-else-if="item.children"
             />
 
@@ -57,6 +59,7 @@ watch(mdAndDown, (val) => {
               :item="item"
               v-else
               class="leftPadding"
+              :key="`item-${i}`"
             />
             <!---End Single Item-->
           </template>
@@ -64,7 +67,7 @@ watch(mdAndDown, (val) => {
         <div class="pa-4">
           <LayoutFullVerticalSidebarUpgradeBox />
         </div>
-      </perfect-scrollbar>
+      </div>
     </div>
   </v-navigation-drawer>
   <!------Header-------->
