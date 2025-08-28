@@ -1,31 +1,25 @@
 <script setup lang="ts">
-import { onMounted, ref, shallowRef, watch } from 'vue';
-defineOptions({ name: 'MainLayout' });
-import { useDisplay } from "vuetify";
-import sidebarItems from "@/components/layout/full/vertical-sidebar/sidebarItem";
-import { Menu2Icon } from "vue-tabler-icons";
+import { onMounted, ref, shallowRef, watch } from 'vue'
+defineOptions({ name: 'MainLayout' })
+import { useDisplay } from 'vuetify'
+import sidebarItems from '@/components/layout/full/vertical-sidebar/sidebarItem'
+import { Menu2Icon } from 'vue-tabler-icons'
 
-const sidebarMenu = shallowRef(sidebarItems);
+const sidebarMenu = shallowRef(sidebarItems)
 
-const { mdAndDown } = useDisplay();
-const sDrawer = ref(true);
+const { mdAndDown } = useDisplay()
+const sDrawer = ref(true)
 onMounted(() => {
-  sDrawer.value = !mdAndDown.value; // hide on mobile, show on desktop
-});
+  sDrawer.value = !mdAndDown.value // hide on mobile, show on desktop
+})
 watch(mdAndDown, (val) => {
-  sDrawer.value = !val;
-});
+  sDrawer.value = !val
+})
 </script>
 
 <template>
   <!------Sidebar-------->
-  <v-navigation-drawer
-    left
-    elevation="0"
-    app
-    class="leftSidebar"
-    v-model="sDrawer"
-  >
+  <v-navigation-drawer left elevation="0" app class="leftSidebar" v-model="sDrawer">
     <!---Logo part -->
     <div class="pa-5">
       <LayoutFullLogo />
@@ -39,11 +33,7 @@ watch(mdAndDown, (val) => {
           <!---Menu Loop -->
           <template v-for="(item, i) in sidebarMenu">
             <!---Item Sub Header -->
-            <LayoutFullVerticalSidebarNavGroup
-              :item="item"
-              v-if="item.header"
-              :key="item.title"
-            />
+            <LayoutFullVerticalSidebarNavGroup :item="item" v-if="item.header" :key="item.title" />
 
             <!---If Has Child -->
             <LayoutFullVerticalSidebarNavCollapse
@@ -72,7 +62,7 @@ watch(mdAndDown, (val) => {
     <div class="d-flex align-center justify-space-between w-100">
       <div>
         <v-btn
-          class="hidden-lg-and-up ms-md-3  text-muted"
+          class="hidden-lg-and-up ms-md-3 text-muted"
           @click="sDrawer = !sDrawer"
           icon
           variant="flat"
