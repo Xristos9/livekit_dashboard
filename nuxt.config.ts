@@ -42,8 +42,15 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'LiveKit Egress Dashboard',
+      title: 'Abyssaltech.AI',
       meta: [{ name: 'viewport', content: 'width=device-width, initialscale=1' }],
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/png',
+          href: '/images/logos/logo_icon.png',
+        },
+      ],
     },
   },
   typescript: {
