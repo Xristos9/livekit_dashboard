@@ -256,7 +256,7 @@ export default defineEventHandler(async (event: H3Event) => {
       const ac = new AbortController()
       const t = setTimeout(() => ac.abort(), ms) // fire abort after `ms`
       try {
-        console.log(`[sendWithTimeout] Starting ${label}, timeout=${ms}ms`)
+        // console.log(`[sendWithTimeout] Starting ${label}, timeout=${ms}ms`)
         // Pass the abort signal down into the SDK call via client options
         return await fn(ac.signal)
       } catch (err: any) {
@@ -264,7 +264,7 @@ export default defineEventHandler(async (event: H3Event) => {
         throw err // bubble up so the caller can handle and keep pipeline moving
       } finally {
         clearTimeout(t)
-        console.log(`[sendWithTimeout] Finished ${label}`)
+        // console.log(`[sendWithTimeout] Finished ${label}`)
       }
     }
 
@@ -275,7 +275,7 @@ export default defineEventHandler(async (event: H3Event) => {
       key: string,
       ms = 10000 // generous 10s per JSON
     ): Promise<string> {
-      console.log(`[getObjectTextWithTimeout] Fetching object: ${key}`)
+      // console.log(`[getObjectTextWithTimeout] Fetching object: ${key}`)
       const got = await sendWithTimeout(
         (signal) =>
           s3.send(
@@ -291,7 +291,7 @@ export default defineEventHandler(async (event: H3Event) => {
       // @ts-ignore Body is an async iterable stream
       if (!got.Body) throw new Error('Empty JSON body')
       const text = await streamToString(got.Body)
-      console.log(`[getObjectTextWithTimeout] Retrieved JSON: ${key}, length=${text.length}`)
+      // console.log(`[getObjectTextWithTimeout] Retrieved JSON: ${key}, length=${text.length}`)
       return text
     }
 
@@ -303,7 +303,7 @@ export default defineEventHandler(async (event: H3Event) => {
       ms = 8000 // shorter deadline for HEAD
     ): Promise<Obj | null> {
       try {
-        console.log(`[headObjectWithTimeout] HEAD request for: ${key}`)
+        // console.log(`[headObjectWithTimeout] HEAD request for: ${key}`)
         const head = await sendWithTimeout(
           (signal) =>
             s3.send(
@@ -316,9 +316,7 @@ export default defineEventHandler(async (event: H3Event) => {
           ms,
           `HeadObject ${key}`
         )
-        console.log(
-          `[headObjectWithTimeout] Found: ${key}, size=${head.ContentLength}, lastModified=${head.LastModified}`
-        )
+        // console.log(`[headObjectWithTimeout] Found: ${key}, size=${head.ContentLength}, lastModified=${head.LastModified}`)
         return {
           Key: key,
           Size: Number(head.ContentLength ?? 0),
@@ -336,28 +334,26 @@ export default defineEventHandler(async (event: H3Event) => {
     // Worker that handles ONE JSON object: fetch JSON, parse, derive MP4, HEAD MP4
     async function processOne(obj: Obj) {
       try {
-        console.log(`[processOne] Starting ${obj.Key}`)
+        // console.log(`[processOne] Starting ${obj.Key}`)
 
         // 2a) Fetch + parse the JSON with timeout
         const text = await getObjectTextWithTimeout(s3, bucket, obj.Key, 10000)
         const data = JSON.parse(text)
-        console.log(`[processOne] Parsed JSON: ${obj.Key}`)
+        // console.log(`[processOne] Parsed JSON: ${obj.Key}`)
 
         // 2b) Extract filename/location for the MP4 from the JSON payload
         const { filename, location } = extractMp4Ref(data)
-        console.log(
-          `[processOne] Extracted refs for ${obj.Key}: filename=${filename}, location=${location}`
-        )
+        // console.log(`[processOne] Extracted refs for ${obj.Key}: filename=${filename}, location=${location}`)
 
         // 2c) Derive MP4 key using URL when available; else same‑dir + filename
         let mp4Key: string | null = null
         if (location) {
           mp4Key = keyFromLocation(location, bucket)
-          console.log(`[processOne] keyFromLocation result: ${mp4Key}`)
+          // console.log(`[processOne] keyFromLocation result: ${mp4Key}`)
         }
         if (!mp4Key && filename) {
           mp4Key = keyFromSameDir(obj.Key, filename)
-          console.log(`[processOne] keyFromSameDir result: ${mp4Key}`)
+          // console.log(`[processOne] keyFromSameDir result: ${mp4Key}`)
         }
 
         // 2d) Optionally verify/enrich the MP4 with HEAD; non‑fatal if it fails
@@ -372,9 +368,7 @@ export default defineEventHandler(async (event: H3Event) => {
         const endedAt = typeof data?.ended_at === 'number' ? data.ended_at : null
         const roomName = typeof data?.room_name === 'string' ? data.room_name : null
 
-        console.log(
-          `[processOne] Computed timestamps for ${obj.Key}: startedAt=${startedAt}, endedAt=${endedAt}`
-        )
+        // console.log(`[processOne] Computed timestamps for ${obj.Key}: startedAt=${startedAt}, endedAt=${endedAt}`)
         records.push({
           egressId: typeof data?.egress_id === 'string' ? data.egress_id : null,
           roomId: typeof data?.room_id === 'string' ? data.room_id : null,
@@ -395,7 +389,7 @@ export default defineEventHandler(async (event: H3Event) => {
               : null,
         })
 
-        console.log(`[processOne] Finished ${obj.Key}`)
+        // console.log(`[processOne] Finished ${obj.Key}`)
       } catch (err) {
         // Ensure the pipeline keeps flowing even if this JSON is malformed or times out
         console.error(`[processOne] Error for ${obj.Key}:`, err)
@@ -415,13 +409,13 @@ export default defineEventHandler(async (event: H3Event) => {
 
     // 2f) Execute workers in fixed‑size chunks (simpler than custom pools/races)
     const chunkSize = jsonConcurrency // e.g., 3
-    console.log(`[runPool] Starting pool with chunkSize=${chunkSize}, total=${jsonBatch.length}`)
+    // console.log(`[runPool] Starting pool with chunkSize=${chunkSize}, total=${jsonBatch.length}`)
     for (let i = 0; i < jsonBatch.length; i += chunkSize) {
       const slice = jsonBatch.slice(i, i + chunkSize)
-      console.log(`[runPool] Processing slice ${i}..${i + slice.length - 1}`)
+      // console.log(`[runPool] Processing slice ${i}..${i + slice.length - 1}`)
       await Promise.all(slice.map(processOne)) // run up to chunkSize workers in parallel
     }
-    console.log('[runPool] Completed all JSON processing')
+    // console.log('[runPool] Completed all JSON processing')
 
     // ------------------------------------------------------------------------
     // STEP 3: Sort newest first by whatever timestamp we have (MP4 or JSON)
