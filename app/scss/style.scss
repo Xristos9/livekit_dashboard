@@ -10,5 +10,7 @@
 @use './components/VNavigationDrawer';
 @use './components/VShadow';
 @use './components/VTable';
+@use './components/RecordingCard';
 @use './pages/dashboards';
+@use './pages/livekit-dashboard';
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
