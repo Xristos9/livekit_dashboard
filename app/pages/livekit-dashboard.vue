@@ -3,16 +3,16 @@
     <v-col cols="12" md="12">
       <v-card elevation="10">
         <v-card-item>
-          <header class="dashboard-header">
+          <div class="dashboard-header">
             <div>
               <h1 class="dashboard-title">LiveKit Egress — Dashboard</h1>
               <p class="dashboard-subtitle">
                 Browse .json logs and .mp4 recordings from your DigitalOcean Space.
               </p>
             </div>
-          </header>
+          </div>
 
-          <section class="controls-section">
+          <div class="controls-section">
             <input
               v-model="prefix"
               class="prefix-input"
@@ -27,20 +27,20 @@
               placeholder="jsonLimit"
             />
             <button @click="load({ reset: true })" class="load-button">Load</button>
-          </section>
+          </div>
 
           <p v-if="error" class="error-message">
             {{ error }}
           </p>
 
-          <section v-if="records.length" class="records-grid">
+          <div v-if="records.length" class="records-grid">
             <RecordingCard
               v-for="r in records"
               :key="r.json?.key || r.egressId || Math.random()"
               :rec="r"
               :file-url="fileUrl"
             />
-          </section>
+          </div>
 
           <p v-else-if="!loading" class="no-records">
             No records yet. Set options and press <em>Load</em>.
@@ -53,70 +53,6 @@
 </template>
 
 <script setup lang="ts">
-// Types
-type RecordPair = {
-  egressId: string | null
-  roomId: string | null
-  roomName: string | null
-  startedAt: number | null
-  endedAt: number | null
-  durationSeconds: number | null
-  phoneNumber: string | null
-  json: { key: string; size?: number; lastModified?: string } | null
-  mp4: { key: string; size?: number; lastModified?: string } | null
-}
-
-// Composable for spaces functionality
-function useSpaces() {
-  const prefix = ref('')
-  const jsonLimit = ref(25)
-  const jsonConcurrency = ref(3)
-  const records = ref<RecordPair[]>([])
-  const loading = ref(false)
-  const error = ref<string | null>(null)
-
-  const load = async ({ reset = false } = {}) => {
-    if (reset) {
-      records.value = []
-    }
-
-    loading.value = true
-    error.value = null
-
-    try {
-      const params = new URLSearchParams({
-        prefix: prefix.value,
-        jsonLimit: jsonLimit.value.toString(),
-        jsonConcurrency: jsonConcurrency.value.toString(),
-      })
-
-      const response = await $fetch<RecordPair[]>(`/api/spaces/list?${params}`)
-      records.value = response
-    } catch (err: any) {
-      error.value = err.message || 'Failed to load records'
-      console.error('Load error:', err)
-    } finally {
-      loading.value = false
-    }
-  }
-
-  const fileUrl = (key?: string | null) => {
-    if (!key) return ''
-    return `/api/spaces/file?key=${encodeURIComponent(key)}`
-  }
-
-  return {
-    prefix,
-    jsonLimit,
-    jsonConcurrency,
-    records,
-    loading,
-    error,
-    load,
-    fileUrl,
-  }
-}
-
 const { prefix, jsonLimit, jsonConcurrency, records, loading, error, load, fileUrl } = useSpaces()
 
 onMounted(() => {
