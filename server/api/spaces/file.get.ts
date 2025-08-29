@@ -1,6 +1,6 @@
 import type { H3Event } from 'h3'
 import { GetObjectCommand } from '@aws-sdk/client-s3'
-import { getS3Client } from '../../utils/s3'
+import { getS3Client } from '~/server/utils/s3'
 
 export default defineEventHandler(async (event: H3Event) => {
   try {

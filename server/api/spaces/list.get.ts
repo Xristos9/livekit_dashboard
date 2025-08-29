@@ -43,23 +43,11 @@ import {
   GetObjectCommand,
   HeadObjectCommand,
 } from '@aws-sdk/client-s3'
-import { getS3Client } from '../../utils/s3'
+import { getS3Client } from '~/server/utils/s3'
+import type { RecordPair } from '@/types/livekit'
 
 // Minimal shape we use for S3 objects in this handler
 type Obj = { Key: string; LastModified?: string; Size?: number }
-
-// Outbound record shape that the UI consumes
-type RecordPair = {
-  egressId: string | null
-  roomId: string | null
-  roomName: string | null
-  startedAt: number | null
-  endedAt: number | null
-  durationSeconds: number | null
-  phoneNumber: string | null // << NEW
-  json: { key: string; size?: number; lastModified?: string } | null
-  mp4: { key: string; size?: number; lastModified?: string } | null
-}
 
 // Runtime knobs with conservative defaults
 const DEFAULT_JSON_LIMIT = 25 // how many JSON files per call
@@ -411,17 +399,17 @@ export default defineEventHandler(async (event: H3Event) => {
       } catch (err) {
         // Ensure the pipeline keeps flowing even if this JSON is malformed or times out
         console.error(`[processOne] Error for ${obj.Key}:`, err)
-        // FIXME: Depending on needs, consider pushing a record with JSON info but null MP4
-        // records.push({
-        //   egressId: null,
-        //   roomId: null,
-        //   roomName: null,
-        //   startedAt: null,
-        //   endedAt: null,
-        //   durationSeconds: null,
-        //   json: { key: obj.Key, size: obj.Size, lastModified: obj.LastModified },
-        //   mp4: null,
-        // });
+        records.push({
+          egressId: null,
+          roomId: null,
+          roomName: null,
+          startedAt: null,
+          endedAt: null,
+          durationSeconds: null,
+          phoneNumber: null,
+          json: { key: obj.Key, size: obj.Size, lastModified: obj.LastModified },
+          mp4: null,
+        })
       }
     }
 
