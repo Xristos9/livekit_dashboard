@@ -10,14 +10,9 @@
 </template>
 
 <script setup lang="ts">
-// Page title
-const title = ref("404-Page Not Found");
+import { useHead } from '#imports';
 useHead({
-  meta: [{ content: title }],
-  titleTemplate: (titleChunk) => {
-    return titleChunk
-      ? `${titleChunk} - 404-Page Not Found`
-      : "Matdash - Nuxt3 Typescript based Free Admin Dashboard Template";
-  },
+  title: '404 - Page Not Found',
+  titleTemplate: (titleChunk) => (titleChunk ? `${titleChunk}` : 'Abyssaltech Al'),
 });
 </script>

@@ -1,15 +1,9 @@
 <script setup lang="ts">
+import { useHead } from '#imports';
 
-const title = ref(
-  "Matdash - Nuxt3 Typescript based Free Admin Dashboard Template"
-);
 useHead({
-  meta: [{ content: title }],
-  titleTemplate: (titleChunk) => {
-    return titleChunk
-      ? `${titleChunk} - Nuxt3 Typescript based Free Admin Dashboard Template`
-      : "Matdash - Nuxt3 Typescript based Free Admin Dashboard Template";
-  },
+  title: 'Abyssaltech Al',
+  titleTemplate: (titleChunk) => (titleChunk ? `${titleChunk}` : 'Abyssaltech Al'),
 });
 </script>
 
