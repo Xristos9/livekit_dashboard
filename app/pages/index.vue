@@ -38,7 +38,7 @@ useHead({
                   <div>
                     <div class="d-flex align-center">
                       <NuxtLink
-                        to="/about"
+                        to="/"
                         class="text-15 font-weight-semibold text-decoration-none text-hover-sky d-flex align-center ga-2 py-lg-1 lg-w-auto w-100 px-3 py-2"
                         >About</NuxtLink
                       >
@@ -47,7 +47,7 @@ useHead({
                   <div>
                     <div class="d-flex align-center">
                       <NuxtLink
-                        to="/docs"
+                        to="/"
                         class="text-15 font-weight-semibold text-decoration-none text-hover-sky d-flex align-center ga-2 py-lg-1 lg-w-auto w-100 px-3 py-2"
                         >Docs</NuxtLink
                       >
@@ -56,7 +56,7 @@ useHead({
                   <div>
                     <div class="d-flex align-center">
                       <NuxtLink
-                        to="/demo"
+                        to="/"
                         class="text-15 font-weight-semibold text-decoration-none text-hover-sky d-flex align-center ga-2 py-lg-1 lg-w-auto w-100 px-3 py-2"
                         >Live Demo
                         <span
@@ -71,7 +71,7 @@ useHead({
                   <div>
                     <div class="d-flex align-center">
                       <NuxtLink
-                        to="/dashboards/dashboard1"
+                        to="/"
                         class="text-15 font-weight-semibold text-decoration-none text-hover-sky d-flex align-center ga-2 py-lg-1 lg-w-auto w-100 px-3 py-2"
                         >Dashboard</NuxtLink
                       >
@@ -80,7 +80,7 @@ useHead({
                   <div>
                     <div class="d-flex align-center">
                       <NuxtLink
-                        to="/pricing"
+                        to="/"
                         class="text-15 font-weight-semibold text-decoration-none text-hover-sky d-flex align-center ga-2 py-lg-1 lg-w-auto w-100 px-3 py-2"
                         >Pricing</NuxtLink
                       >
@@ -89,7 +89,7 @@ useHead({
                   <div>
                     <div class="d-flex align-center">
                       <NuxtLink
-                        to="/contact"
+                        to="/"
                         class="text-15 font-weight-semibold text-decoration-none text-hover-sky d-flex align-center ga-2 py-lg-1 lg-w-auto w-100 px-3 py-2"
                         >Contact</NuxtLink
                       >
