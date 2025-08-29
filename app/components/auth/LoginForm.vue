@@ -26,7 +26,7 @@ const checkbox = ref(true);
             </div>
         </v-col>
         <v-col cols="12" class="pt-0">
-            <v-btn to="/" color="primary" size="large" block flat>Sign in</v-btn>
+            <v-btn to="/dashboard" color="primary" size="large" block flat>Sign in</v-btn>
         </v-col>
     </v-row>
 </template>

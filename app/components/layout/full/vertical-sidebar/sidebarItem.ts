@@ -21,7 +21,7 @@ const sidebarItem: menu[] = [
   {
     title: 'Dashboard',
     icon: 'adhesive-plaster-outline',
-    to: '/',
+    to: '/dashboard',
   },
   { header: 'Pages' },
   {
