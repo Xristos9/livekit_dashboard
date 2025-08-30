@@ -34,6 +34,11 @@ const sidebarItem: menu[] = [
     icon: 'planet-3-line-duotone',
     to: '/livekit-dashboard',
   },
+  {
+    title: 'AI Dashboard',
+    icon: 'cpu-line-duotone',
+    to: '/ai-dashboard',
+  },
   { header: 'auth' },
   {
     title: 'Login',
