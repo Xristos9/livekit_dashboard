@@ -20,7 +20,6 @@ export default defineEventHandler(async (event) => {
   const escapeValue = (v: string) => v.replace(/'/g, "\\'")
   const filter = `{Username}='${escapeValue(username)}'`
   const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}?filterByFormula=${encodeURIComponent(filter)}&maxRecords=1`
-  log('Airtable login URL:', url)
   const resp = await fetch(url, {
     headers: { Authorization: `Bearer ${apiKey}` },
   })
