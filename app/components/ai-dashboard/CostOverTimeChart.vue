@@ -9,16 +9,17 @@ const props = defineProps<{
 }>()
 
 const chartRef = ref<HTMLCanvasElement>()
-let chartInstance: Chart | null = null
+let chartInstance: Chart<'line', (number | null)[], string> | null = null
 
-const costByDate = computed(() => {
+const costByDate = computed<{ labels: string[]; values: (number | null)[] }>(() => {
   const grouped = props.sessions.reduce((acc, session) => {
     acc[session.date] = (acc[session.date] || 0) + session.cost
     return acc
   }, {} as Record<string, number>)
   
   const labels = Object.keys(grouped).sort()
-  const values = labels.map(date => grouped[date])
+  // Use nulls (not undefined) for gaps to satisfy Chart.js types
+  const values = labels.map(date => grouped[date] ?? null)
   
   return { labels, values }
 })
