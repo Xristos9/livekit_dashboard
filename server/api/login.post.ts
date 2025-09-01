@@ -42,7 +42,8 @@ export default defineEventHandler(async (event) => {
   const record = Array.isArray(data.records) ? data.records[0] : null
 
   if (record && record.fields?.Password === password) {
-    return { success: true, user: record.fields }
+    const { Password, ...user } = record.fields
+    return { success: true, user }
   }
 
   return { success: false, message: 'Invalid credentials' }

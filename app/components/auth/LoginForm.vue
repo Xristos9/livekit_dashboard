@@ -1,27 +1,56 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from '#imports'
+import { ref, onMounted } from 'vue'
+import { useRouter, useState } from '#imports'
 
 const username = ref('')
 const password = ref('')
 const checkbox = ref(true)
 const error = ref('')
+const loading = ref(false)
+const user = useState<any | null>('user', () => null)
 const router = useRouter()
 
+onMounted(() => {
+  const savedUsername = localStorage.getItem('rememberedUsername')
+  if (savedUsername) {
+    username.value = savedUsername
+    checkbox.value = true
+  }
+  const savedUser = localStorage.getItem('userData')
+  if (savedUser) {
+    try {
+      user.value = JSON.parse(savedUser)
+    } catch {}
+  }
+})
+
 const login = async () => {
+  if (loading.value) return
+  loading.value = true
   error.value = ''
   try {
-    const res = await $fetch<{ success: boolean; message?: string }>('/api/login', {
+    const res = await $fetch<{ success: boolean; message?: string; user?: any }>('/api/login', {
       method: 'POST',
       body: { username: username.value, password: password.value },
     })
-    if (res.success) {
+    if (res.success && res.user) {
+      const { Password, ...sanitized } = res.user
+      user.value = sanitized
+      if (checkbox.value) {
+        localStorage.setItem('rememberedUsername', username.value)
+        localStorage.setItem('userData', JSON.stringify(sanitized))
+      } else {
+        localStorage.removeItem('rememberedUsername')
+        localStorage.removeItem('userData')
+      }
       router.push('/dashboard')
     } else {
       error.value = res.message || 'Invalid credentials'
     }
   } catch (e: any) {
     error.value = e?.statusMessage || 'Login failed'
+  } finally {
+    loading.value = false
   }
 }
 </script>
@@ -52,7 +81,7 @@ const login = async () => {
     <v-col cols="12" class="pt-0">
       <div class="d-flex align-center flex-wrap">
         <v-checkbox v-model="checkbox" color="primary" hide-details>
-          <template v-slot:label class="text-body-1">Remeber this Device</template>
+          <template v-slot:label class="text-body-1">Remember this Device</template>
         </v-checkbox>
         <div class="ml-sm-auto">
           <NuxtLink
@@ -67,7 +96,9 @@ const login = async () => {
       <v-alert type="error" density="compact" variant="tonal">{{ error }}</v-alert>
     </v-col>
     <v-col cols="12" class="pt-0">
-      <v-btn color="primary" size="large" block flat @click="login">Sign in</v-btn>
+      <v-btn color="primary" size="large" block flat @click="login" :loading="loading">
+        Sign in
+      </v-btn>
     </v-col>
   </v-row>
 </template>
