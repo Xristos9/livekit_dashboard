@@ -17,7 +17,7 @@ function formatUSD(n: number) {
         <v-card-item>
           <div class="kpi-label">Total Sessions</div>
           <div class="kpi-value">{{ data.totalSessions }}</div>
-          <div class="kpi-delta">+12% vs last period</div>
+          <!-- <div class="kpi-delta">+12% vs last period</div> -->
         </v-card-item>
       </v-card>
     </v-col>
@@ -26,7 +26,7 @@ function formatUSD(n: number) {
         <v-card-item>
           <div class="kpi-label">Total Cost (USD)</div>
           <div class="kpi-value">{{ formatUSD(data.totalCost) }}</div>
-          <div class="kpi-delta">+9% vs last period</div>
+          <!-- <div class="kpi-delta">+9% vs last period</div> -->
         </v-card-item>
       </v-card>
     </v-col>
@@ -35,7 +35,7 @@ function formatUSD(n: number) {
         <v-card-item>
           <div class="kpi-label">Avg. Session Duration</div>
           <div class="kpi-value">{{ Math.round(data.avgDuration) }} s</div>
-          <div class="kpi-delta">-5% vs last period</div>
+          <!-- <div class="kpi-delta">-5% vs last period</div> -->
         </v-card-item>
       </v-card>
     </v-col>
@@ -44,7 +44,7 @@ function formatUSD(n: number) {
         <v-card-item>
           <div class="kpi-label">Avg. Cost per Session</div>
           <div class="kpi-value">{{ formatUSD(data.avgCostPerSession) }}</div>
-          <div class="kpi-delta">-3% vs last period</div>
+          <!-- <div class="kpi-delta">-3% vs last period</div> -->
         </v-card-item>
       </v-card>
     </v-col>

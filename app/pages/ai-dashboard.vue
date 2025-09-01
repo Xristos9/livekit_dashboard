@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { sessions, tokenLogs, modelCosts, agentCosts } from '@/data/ai-dashboard/mockData'
 import type { KPIData } from '@/types/ai-dashboard'
-
+// Dashboard components
+import KPICards from '@/components/ai-dashboard/KPICards.vue'
+import CostOverTimeChart from '@/components/ai-dashboard/CostOverTimeChart.vue'
+import TokenBreakdownChart from '@/components/ai-dashboard/TokenBreakdownChart.vue'
+import DurationVsCostChart from '@/components/ai-dashboard/DurationVsCostChart.vue'
+import ModelCostChart from '@/components/ai-dashboard/ModelCostChart.vue'
+import AgentContributionChart from '@/components/ai-dashboard/AgentContributionChart.vue'
+import SessionsTable from '@/components/ai-dashboard/SessionsTable.vue'
 // Calculate KPIs
 const kpiData = computed<KPIData>(() => {
   const totalSessions = sessions.length
@@ -13,7 +20,7 @@ const kpiData = computed<KPIData>(() => {
     totalSessions,
     totalCost,
     avgDuration,
-    avgCostPerSession
+    avgCostPerSession,
   }
 })
 
@@ -27,23 +34,11 @@ const rangeOptions = ['This Month', 'Last 30 Days', 'Custom']
     <div class="dashboard-header mb-6">
       <div>
         <h1 class="dashboard-title">Client AI Usage Dashboard</h1>
-        <p class="dashboard-subtitle">
-          Monitor AI agent performance, costs, and usage patterns
-        </p>
+        <p class="dashboard-subtitle">Monitor AI agent performance, costs, and usage patterns</p>
       </div>
       <div class="range-selector">
-        <v-btn-toggle
-          v-model="selectedRange"
-          variant="outlined"
-          color="primary"
-          mandatory
-        >
-          <v-btn
-            v-for="option in rangeOptions"
-            :key="option"
-            :value="option"
-            size="small"
-          >
+        <v-btn-toggle v-model="selectedRange" variant="outlined" color="primary" mandatory>
+          <v-btn v-for="option in rangeOptions" :key="option" :value="option" size="small">
             {{ option }}
           </v-btn>
         </v-btn-toggle>
