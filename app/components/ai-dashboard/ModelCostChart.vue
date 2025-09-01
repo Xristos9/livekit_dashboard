@@ -1,67 +1,41 @@
 <script setup lang="ts">
-import { Chart, registerables } from 'chart.js'
 import type { ModelCost } from '@/types/ai-dashboard'
-
-Chart.register(...registerables)
 
 const props = defineProps<{
   modelCosts: ModelCost[]
 }>()
 
-const chartRef = ref<HTMLCanvasElement>()
-let chartInstance: Chart | null = null
+const categories = computed(() => (props.modelCosts ?? []).map(m => m.model))
+const series = computed(() => [
+  { name: 'Total Cost', data: (props.modelCosts ?? []).map(m => m.cost) },
+])
 
-onMounted(() => {
-  if (chartRef.value) {
-    chartInstance = new Chart(chartRef.value, {
-      type: 'bar',
-      data: {
-        labels: props.modelCosts.map(m => m.model),
-        datasets: [{
-          label: 'Total Cost',
-          data: props.modelCosts.map(m => m.cost),
-          backgroundColor: 'rgb(var(--v-theme-info))',
-          borderColor: 'rgb(var(--v-theme-info))',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        indexAxis: 'y',
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          x: {
-            grid: {
-              color: 'rgba(var(--v-theme-borderColor), 0.3)'
-            },
-            ticks: {
-              color: 'rgb(var(--v-theme-textSecondary))'
-            }
-          },
-          y: {
-            grid: {
-              color: 'rgba(var(--v-theme-borderColor), 0.3)'
-            },
-            ticks: {
-              color: 'rgb(var(--v-theme-textSecondary))'
-            }
-          }
-        }
-      }
-    })
-  }
-})
+const chartOptions = computed(() => ({
+  chart: {
+    type: 'bar',
+    toolbar: { show: false },
+    fontFamily: 'inherit',
+  },
+  plotOptions: {
+    bar: { horizontal: true }
+  },
+  colors: ['rgb(var(--v-theme-info))'],
+  dataLabels: { enabled: false },
+  grid: { borderColor: 'rgba(var(--v-theme-borderColor), 0.3)' },
+  xaxis: {
+    categories: categories.value,
+    axisBorder: { color: 'rgba(var(--v-theme-borderColor), 0.3)' },
+    labels: { style: { colors: 'rgb(var(--v-theme-textSecondary))' } },
+  },
+  yaxis: {
+    labels: { style: { colors: 'rgb(var(--v-theme-textSecondary))' } },
+  },
+  legend: { show: false },
+  noData: { text: 'No data' },
+}))
 
-onUnmounted(() => {
-  if (chartInstance) {
-    chartInstance.destroy()
-  }
-})
+const ready = computed(() => Array.isArray(series.value) && series.value[0]?.data?.length > 0)
+const chartKey = computed(() => (ready.value ? categories.value.join('|') : 'empty'))
 </script>
 
 <template>
@@ -69,7 +43,17 @@ onUnmounted(() => {
     <v-card-item>
       <v-card-title class="text-h6 mb-3">Model Cost Distribution</v-card-title>
       <div class="chart-container">
-        <canvas ref="chartRef"></canvas>
+        <client-only>
+          <apexchart
+            :key="chartKey"
+            v-if="ready"
+            type="bar"
+            height="320"
+            :options="chartOptions"
+            :series="series"
+          />
+          <div v-else class="d-flex align-center justify-center h-100">No data</div>
+        </client-only>
       </div>
     </v-card-item>
   </v-card>

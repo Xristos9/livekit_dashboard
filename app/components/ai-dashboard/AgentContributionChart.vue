@@ -1,59 +1,39 @@
 <script setup lang="ts">
-import { Chart, registerables } from 'chart.js'
 import type { AgentCost } from '@/types/ai-dashboard'
-
-Chart.register(...registerables)
 
 const props = defineProps<{
   agentCosts: AgentCost[]
 }>()
 
-const chartRef = ref<HTMLCanvasElement>()
-let chartInstance: Chart | null = null
+const labels = computed(() => (props.agentCosts ?? []).map(a => a.agent))
+const series = computed(() => (props.agentCosts ?? []).map(a => a.cost))
 
-onMounted(() => {
-  if (chartRef.value) {
-    chartInstance = new Chart(chartRef.value, {
-      type: 'pie',
-      data: {
-        labels: props.agentCosts.map(a => a.agent),
-        datasets: [{
-          data: props.agentCosts.map(a => a.cost),
-          backgroundColor: [
-            'rgb(var(--v-theme-primary))',
-            'rgb(var(--v-theme-secondary))',
-            'rgb(var(--v-theme-success))',
-            'rgb(var(--v-theme-warning))',
-            'rgb(var(--v-theme-error))',
-            'rgb(var(--v-theme-info))'
-          ],
-          borderWidth: 2,
-          borderColor: 'rgb(var(--v-theme-surface))'
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'right',
-            labels: {
-              color: 'rgb(var(--v-theme-textPrimary))',
-              usePointStyle: true,
-              padding: 20
-            }
-          }
-        }
-      }
-    })
-  }
-})
+const chartOptions = computed(() => ({
+  chart: {
+    type: 'donut',
+    toolbar: { show: false },
+    fontFamily: 'inherit',
+  },
+  labels: labels.value,
+  legend: {
+    position: 'right',
+    markers: { width: 12, height: 12 },
+  },
+  colors: [
+    'rgb(var(--v-theme-primary))',
+    'rgb(var(--v-theme-secondary))',
+    'rgb(var(--v-theme-success))',
+    'rgb(var(--v-theme-warning))',
+    'rgb(var(--v-theme-error))',
+    'rgb(var(--v-theme-info))'
+  ],
+  stroke: { colors: ['rgb(var(--v-theme-surface))'], width: 2 },
+  dataLabels: { enabled: false },
+  noData: { text: 'No data' },
+}))
 
-onUnmounted(() => {
-  if (chartInstance) {
-    chartInstance.destroy()
-  }
-})
+const ready = computed(() => Array.isArray(series.value) && series.value.length > 0 && labels.value.length > 0)
+const chartKey = computed(() => (ready.value ? labels.value.join('|') : 'empty'))
 </script>
 
 <template>
@@ -61,7 +41,17 @@ onUnmounted(() => {
     <v-card-item>
       <v-card-title class="text-h6 mb-3">Agent Contribution</v-card-title>
       <div class="chart-container">
-        <canvas ref="chartRef"></canvas>
+        <client-only>
+          <apexchart
+            :key="chartKey"
+            v-if="ready"
+            type="donut"
+            height="320"
+            :options="chartOptions"
+            :series="series"
+          />
+          <div v-else class="d-flex align-center justify-center h-100">No data</div>
+        </client-only>
       </div>
     </v-card-item>
   </v-card>

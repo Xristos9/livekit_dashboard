@@ -1,80 +1,66 @@
 <script setup lang="ts">
-import { Chart, registerables } from 'chart.js'
 import type { Session } from '@/types/ai-dashboard'
-
-Chart.register(...registerables)
 
 const props = defineProps<{
   sessions: Session[]
 }>()
 
-const chartRef = ref<HTMLCanvasElement>()
-let chartInstance: Chart<'line', (number | null)[], string> | null = null
-
 const costByDate = computed<{ labels: string[]; values: (number | null)[] }>(() => {
-  const grouped = props.sessions.reduce((acc, session) => {
-    acc[session.date] = (acc[session.date] || 0) + session.cost
-    return acc
-  }, {} as Record<string, number>)
-  
+  const grouped = props.sessions.reduce(
+    (acc, session) => {
+      acc[session.date] = (acc[session.date] || 0) + session.cost
+      return acc
+    },
+    {} as Record<string, number>
+  )
+
   const labels = Object.keys(grouped).sort()
-  // Use nulls (not undefined) for gaps to satisfy Chart.js types
-  const values = labels.map(date => grouped[date] ?? null)
-  
+  const values = labels.map((date) => grouped[date] ?? null)
+
   return { labels, values }
 })
 
-onMounted(() => {
-  if (chartRef.value) {
-    chartInstance = new Chart(chartRef.value, {
-      type: 'line',
-      data: {
-        labels: costByDate.value.labels,
-        datasets: [{
-          label: 'Total Cost (USD)',
-          data: costByDate.value.values,
-          borderColor: 'rgb(var(--v-theme-primary))',
-          backgroundColor: 'rgba(var(--v-theme-primary), 0.1)',
-          tension: 0.35,
-          fill: true
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          x: {
-            grid: {
-              color: 'rgba(var(--v-theme-borderColor), 0.3)'
-            },
-            ticks: {
-              color: 'rgb(var(--v-theme-textSecondary))'
-            }
-          },
-          y: {
-            grid: {
-              color: 'rgba(var(--v-theme-borderColor), 0.3)'
-            },
-            ticks: {
-              color: 'rgb(var(--v-theme-textSecondary))'
-            }
-          }
-        }
-      }
-    })
-  }
-})
+const series = computed(() => [
+  {
+    name: 'Total Cost (USD)',
+    data: costByDate.value.values,
+  },
+])
 
-onUnmounted(() => {
-  if (chartInstance) {
-    chartInstance.destroy()
-  }
-})
+const chartOptions = computed(() => ({
+  chart: {
+    type: 'line',
+    toolbar: { show: false },
+    fontFamily: 'inherit',
+  },
+  colors: ['rgb(var(--v-theme-primary))'],
+  stroke: {
+    curve: 'smooth',
+  },
+  fill: {
+    type: 'solid',
+    opacity: 0.1,
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  grid: {
+    borderColor: 'rgba(var(--v-theme-borderColor), 0.3)',
+  },
+  xaxis: {
+    categories: costByDate.value.labels,
+    axisBorder: { color: 'rgba(var(--v-theme-borderColor), 0.3)' },
+    labels: {
+      style: { colors: 'rgb(var(--v-theme-textSecondary))' },
+    },
+  },
+  yaxis: {
+    labels: {
+      style: { colors: 'rgb(var(--v-theme-textSecondary))' },
+    },
+  },
+  legend: { show: false },
+}))
 </script>
 
 <template>
@@ -82,7 +68,9 @@ onUnmounted(() => {
     <v-card-item>
       <v-card-title class="text-h6 mb-3">Cost Over Time</v-card-title>
       <div class="chart-container">
-        <canvas ref="chartRef"></canvas>
+        <client-only>
+          <apexchart type="line" height="320" :options="chartOptions" :series="series" />
+        </client-only>
       </div>
     </v-card-item>
   </v-card>

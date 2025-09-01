@@ -108,7 +108,7 @@ const rangeOptions = ['This Month', 'Last 30 Days', 'Custom']
   }
 
   .charts-grid {
-    gap: 1rem;
+    row-gap: 1rem;
   }
 }
 </style>

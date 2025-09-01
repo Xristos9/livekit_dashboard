@@ -1,75 +1,42 @@
 <script setup lang="ts">
-import { Chart, registerables } from 'chart.js'
 import type { Session } from '@/types/ai-dashboard'
-
-Chart.register(...registerables)
 
 const props = defineProps<{
   sessions: Session[]
 }>()
 
-const chartRef = ref<HTMLCanvasElement>()
-let chartInstance: Chart | null = null
+const series = computed(() => [
+  {
+    name: 'Sessions',
+    data: (props.sessions ?? []).map(s => ({ x: s.duration, y: s.cost })),
+  },
+])
 
-onMounted(() => {
-  if (chartRef.value) {
-    chartInstance = new Chart(chartRef.value, {
-      type: 'scatter',
-      data: {
-        datasets: [{
-          label: 'Sessions',
-          data: props.sessions.map(s => ({ x: s.duration, y: s.cost })),
-          backgroundColor: 'rgb(var(--v-theme-primary))',
-          borderColor: 'rgb(var(--v-theme-primary))',
-          pointRadius: 4
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Duration (s)',
-              color: 'rgb(var(--v-theme-textPrimary))'
-            },
-            grid: {
-              color: 'rgba(var(--v-theme-borderColor), 0.3)'
-            },
-            ticks: {
-              color: 'rgb(var(--v-theme-textSecondary))'
-            }
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Cost (USD)',
-              color: 'rgb(var(--v-theme-textPrimary))'
-            },
-            grid: {
-              color: 'rgba(var(--v-theme-borderColor), 0.3)'
-            },
-            ticks: {
-              color: 'rgb(var(--v-theme-textSecondary))'
-            }
-          }
-        }
-      }
-    })
-  }
-})
+const chartOptions = computed(() => ({
+  chart: {
+    type: 'scatter',
+    toolbar: { show: false },
+    fontFamily: 'inherit',
+  },
+  colors: ['rgb(var(--v-theme-primary))'],
+  dataLabels: { enabled: false },
+  grid: { borderColor: 'rgba(var(--v-theme-borderColor), 0.3)' },
+  xaxis: {
+    title: { text: 'Duration (s)' },
+    axisBorder: { color: 'rgba(var(--v-theme-borderColor), 0.3)' },
+    labels: { style: { colors: 'rgb(var(--v-theme-textSecondary))' } },
+  },
+  yaxis: {
+    title: { text: 'Cost (USD)' },
+    labels: { style: { colors: 'rgb(var(--v-theme-textSecondary))' } },
+  },
+  legend: { show: false },
+  markers: { size: 4 },
+  noData: { text: 'No data' },
+}))
 
-onUnmounted(() => {
-  if (chartInstance) {
-    chartInstance.destroy()
-  }
-})
+const ready = computed(() => Array.isArray(series.value?.[0]?.data) && series.value[0].data.length > 0)
+const chartKey = computed(() => (ready.value ? series.value[0].data.length : 'empty'))
 </script>
 
 <template>
@@ -77,7 +44,17 @@ onUnmounted(() => {
     <v-card-item>
       <v-card-title class="text-h6 mb-3">Session Duration vs Cost</v-card-title>
       <div class="chart-container">
-        <canvas ref="chartRef"></canvas>
+        <client-only>
+          <apexchart
+            :key="chartKey"
+            v-if="ready"
+            type="scatter"
+            height="320"
+            :options="chartOptions"
+            :series="series"
+          />
+          <div v-else class="d-flex align-center justify-center h-100">No data</div>
+        </client-only>
       </div>
     </v-card-item>
   </v-card>
