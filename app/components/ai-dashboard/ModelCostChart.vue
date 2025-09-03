@@ -5,64 +5,78 @@ const props = defineProps<{
   modelCosts: ModelCost[]
 }>()
 
-const categories = computed(() => (props.modelCosts ?? []).map(m => m.model))
+const categories = computed(() => (props.modelCosts ?? []).map((m) => m.model))
 const series = computed(() => [
-  { name: 'Total Cost', data: (props.modelCosts ?? []).map(m => m.cost) },
+  { name: 'Total Cost', data: (props.modelCosts ?? []).map((m) => m.cost) },
 ])
+console.log(series.value);
+
 
 const chartOptions = computed(() => ({
   chart: {
     type: 'bar',
     toolbar: { show: false },
     fontFamily: 'inherit',
+    foreColor: '#adb0bb',
+    offsetX: -15,
   },
   plotOptions: {
-    bar: { horizontal: true }
+    bar: {
+      horizontal: true,
+      barHeight: '60%',
+      columnWidth: '15%',
+      borderRadius: [6],
+      borderRadiusApplication: 'end',
+      borderRadiusWhenStacked: 'all',
+    },
   },
-  colors: ['rgb(var(--v-theme-info))'],
+  fill: {
+    type: 'solid',
+    opacity: 0.1,
+  },
+  colors: ['rgba(var(--v-theme-primary))'],
   dataLabels: { enabled: false },
-  grid: { borderColor: 'rgba(var(--v-theme-borderColor), 0.3)' },
-  xaxis: {
-    categories: categories.value,
-    axisBorder: { color: 'rgba(var(--v-theme-borderColor), 0.3)' },
-    labels: { style: { colors: 'rgb(var(--v-theme-textSecondary))' } },
+  grid: {
+    show: true,
+    padding: {
+      top: 0,
+      bottom: 0,
+      right: 0,
+    },
+    borderColor: 'rgba(0,0,0,0.05)',
+    xaxis: {
+      lines: {
+        show: true,
+      },
+    },
+    yaxis: {
+      lines: {
+        show: true,
+      },
+    },
   },
-  yaxis: {
-    labels: { style: { colors: 'rgb(var(--v-theme-textSecondary))' } },
+  xaxis: {
+    title: { text: 'Cost (USD)' },
+    categories: categories.value,
+    axisBorder: {
+      show: false,
+    },
+    labels: {
+      style: { fontSize: '13px', colors: '#adb0bb', fontWeight: '400' },
+    },
   },
   legend: { show: false },
   noData: { text: 'No data' },
 }))
-
-const ready = computed(() => Array.isArray(series.value) && series.value[0]?.data?.length > 0)
-const chartKey = computed(() => (ready.value ? categories.value.join('|') : 'empty'))
 </script>
 
 <template>
   <v-card elevation="10" class="chart-card">
     <v-card-item>
       <v-card-title class="text-h6 mb-3">Model Cost Distribution</v-card-title>
-      <div class="chart-container">
-        <client-only>
-          <apexchart
-            :key="chartKey"
-            v-if="ready"
-            type="bar"
-            height="320"
-            :options="chartOptions"
-            :series="series"
-          />
-          <div v-else class="d-flex align-center justify-center h-100">No data</div>
-        </client-only>
+      <div class="mx-3 mt-4 pt-2">
+        <apexchart type="bar" height="320" :options="chartOptions" :series="series" />
       </div>
     </v-card-item>
   </v-card>
 </template>
-
-<style scoped lang="scss">
-.chart-container {
-  position: relative;
-  height: 320px;
-  width: 100%;
-}
-</style>

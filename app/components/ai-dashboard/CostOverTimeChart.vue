@@ -14,11 +14,43 @@ const costByDate = computed<{ labels: string[]; values: (number | null)[] }>(() 
     {} as Record<string, number>
   )
 
-  const labels = Object.keys(grouped).sort()
-  const values = labels.map((date) => grouped[date] ?? null)
+  // Sort raw ISO dates, then format to `DD Mon` (e.g., `29 Jul`)
+  const rawDates = Object.keys(grouped).sort()
+
+  const values = rawDates.map((date) => {
+    const val = grouped[date]
+    return val != null ? Number(val.toFixed(3)) : null
+  })
+
+  const labels = rawDates.map((dateStr) => formatDateLabel(dateStr))
 
   return { labels, values }
 })
+
+function formatDateLabel(dateStr: string): string {
+  // Avoid timezone drift by parsing and mapping month names manually
+  const [yy, mm, dd] = dateStr.split('-')
+  const dNum = parseInt(dd || '', 10)
+  const mNum = parseInt(mm || '', 10)
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+  const day = Number.isNaN(dNum) ? '' : String(dNum)
+  const mon = !Number.isNaN(mNum) && mNum >= 1 && mNum <= 12 ? months[mNum - 1] : ''
+  return `${day} ${mon}`.trim()
+}
+
 
 const series = computed(() => [
   {
@@ -29,13 +61,17 @@ const series = computed(() => [
 
 const chartOptions = computed(() => ({
   chart: {
+    toolbar: {
+      show: false,
+    },
     type: 'line',
-    toolbar: { show: false },
     fontFamily: 'inherit',
+    foreColor: '#adb0bb',
+    offsetX: -15,
   },
-  colors: ['rgb(var(--v-theme-primary))'],
+  colors: ['rgba(var(--v-theme-primary))'],
   stroke: {
-    curve: 'smooth',
+    curve: 'straight',
   },
   fill: {
     type: 'solid',
@@ -44,42 +80,66 @@ const chartOptions = computed(() => ({
   dataLabels: {
     enabled: false,
   },
+  plotOptions: {
+    line: {
+      horizontal: false,
+      barHeight: '60%',
+      columnWidth: '15%',
+      borderRadius: [6],
+      borderRadiusApplication: 'end',
+      borderRadiusWhenStacked: 'all',
+    },
+  },
   grid: {
-    borderColor: 'rgba(var(--v-theme-borderColor), 0.3)',
+    show: true,
+    padding: {
+      top: 0,
+      bottom: 0,
+      right: 0,
+    },
+    borderColor: 'rgba(0,0,0,0.05)',
+    xaxis: {
+      lines: {
+        show: true,
+      },
+    },
+    yaxis: {
+      lines: {
+        show: true,
+      },
+    },
   },
   xaxis: {
     categories: costByDate.value.labels,
-    axisBorder: { color: 'rgba(var(--v-theme-borderColor), 0.3)' },
+    axisBorder: {
+      show: false,
+    },
+    axisTicks: {
+      show: false,
+    },
     labels: {
-      style: { colors: 'rgb(var(--v-theme-textSecondary))' },
+      style: { fontSize: '13px', colors: '#adb0bb', fontWeight: '400' },
     },
   },
-  yaxis: {
-    labels: {
-      style: { colors: 'rgb(var(--v-theme-textSecondary))' },
-    },
+  tooltip: {
+    theme: 'dark',
   },
-  legend: { show: false },
 }))
 </script>
 
 <template>
-  <v-card elevation="10" class="chart-card">
+  <v-card elevation="10">
     <v-card-item>
-      <v-card-title class="text-h6 mb-3">Cost Over Time</v-card-title>
-      <div class="chart-container">
-        <client-only>
-          <apexchart type="line" height="320" :options="chartOptions" :series="series" />
-        </client-only>
+      <v-card-title class="text-h5">Cost Over Time</v-card-title>
+      <div class="mx-3 mt-4 pt-2">
+        <apexchart
+          type="line"
+          height="320"
+          class="rounded-bars"
+          :options="chartOptions"
+          :series="series"
+        />
       </div>
     </v-card-item>
   </v-card>
 </template>
-
-<style scoped lang="scss">
-.chart-container {
-  position: relative;
-  height: 320px;
-  width: 100%;
-}
-</style>
