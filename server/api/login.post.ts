@@ -52,7 +52,6 @@ export default defineEventHandler(async (event) => {
       totalCostUSD: record.fields?.['Total Cost (USD)'],
       averageSessionDuration: record.fields?.['Average Session Duration (s)'],
       username: record.fields?.Username,
-      password: record.fields?.Password,
     }
 
     // store user information in a cookie accessible on client
