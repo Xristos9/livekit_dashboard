@@ -3,6 +3,7 @@ import { UserIcon, MailIcon, ListCheckIcon } from 'vue-tabler-icons'
 import { useRouter } from '#imports'
 
 const router = useRouter()
+const user = useUser()
 const logout = async () => {
   await $fetch('/api/logout', { method: 'POST', credentials: 'include' })
   router.push('/')
@@ -28,6 +29,9 @@ const logout = async () => {
       </v-btn>
     </template>
     <v-sheet rounded="md" width="200" elevation="10" class="mt-2">
+      <div class="px-5 pt-4 pb-2 text-center" v-if="user?.username">
+        <span class="text-subtitle-1 font-weight-medium">{{ user.username }}</span>
+      </div>
       <v-list class="py-0" lines="one" density="compact">
         <v-list-item value="item1" active-color="primary">
           <template v-slot:prepend>

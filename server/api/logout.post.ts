@@ -6,5 +6,9 @@ export default defineEventHandler((event) => {
     path: '/',
     maxAge: 0,
   })
+  setCookie(event, 'user', '', {
+    path: '/',
+    maxAge: 0,
+  })
   return { success: true }
 })

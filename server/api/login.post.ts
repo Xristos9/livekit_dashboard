@@ -42,6 +42,26 @@ export default defineEventHandler(async (event) => {
   const record = Array.isArray(data.records) ? data.records[0] : null
 
   if (record && record.fields?.Password === password) {
+    const userData = {
+      id: record.id,
+      name: record.fields?.Name,
+      email: record.fields?.Email,
+      trunkId: record.fields?.['Trunk ID'],
+      sessions: record.fields?.Sessions,
+      totalSessions: record.fields?.['Total Sessions'],
+      totalCostUSD: record.fields?.['Total Cost (USD)'],
+      averageSessionDuration: record.fields?.['Average Session Duration (s)'],
+      username: record.fields?.Username,
+      password: record.fields?.Password,
+    }
+
+    // store user information in a cookie accessible on client
+    setCookie(event, 'user', JSON.stringify(userData), {
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60, // 1 hour
+    })
+
     const token = randomBytes(16).toString('hex')
     setCookie(event, 'session', token, {
       httpOnly: true,
@@ -49,7 +69,8 @@ export default defineEventHandler(async (event) => {
       path: '/',
       maxAge: 60 * 60, // 1 hour
     })
-    return { success: true }
+
+    return { success: true, user: userData }
   }
 
   return { success: false, message: 'Invalid credentials' }

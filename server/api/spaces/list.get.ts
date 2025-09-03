@@ -36,7 +36,7 @@
 //   plus JSON and MP4 object info (if resolvable).
 // ----------------------------------------------------------------------------
 
-import type { H3Event } from 'h3'
+import { getCookie, type H3Event } from 'h3'
 import {
   ListObjectsV2Command,
   type ListObjectsV2CommandOutput,
@@ -172,7 +172,21 @@ export default defineEventHandler(async (event: H3Event) => {
   try {
     // Read & sanitize query params with reasonable bounds/defaults
     const q = getQuery(event)
-    const prefix = typeof q.prefix === 'string' ? q.prefix : '' // optional folder filter
+
+    // Derive the trunk-based prefix from the authenticated user's cookie
+    const userCookie = getCookie(event, 'user')
+    let trunkId: string | null = null
+    if (userCookie) {
+      try {
+        trunkId = JSON.parse(userCookie).trunkId || null
+      } catch {}
+    }
+    if (!trunkId) {
+      throw createError({ statusCode: 401, statusMessage: 'Missing trunk ID' })
+    }
+
+    const prefix =
+      `${trunkId}/` + (typeof q.prefix === 'string' ? q.prefix : '') // only list within trunk folder
     const continuationToken =
       typeof q.continuationToken === 'string' ? q.continuationToken : undefined // S3 cursor (not returned in this version)
     const jsonLimit = Math.max(1, Math.min(200, Number(q.jsonLimit ?? DEFAULT_JSON_LIMIT))) // clamp 1..200
