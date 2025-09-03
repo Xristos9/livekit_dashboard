@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Icon } from '@iconify/vue'
 definePageMeta({
   layout: 'blank',
 })
@@ -6,72 +7,85 @@ definePageMeta({
 useHead({
   title: 'Abyssaltech.AI - AI Customer Service Dashboard',
   meta: [
-    { name: 'description', content: 'Monitor and optimize your AI customer service agents with real-time analytics, performance insights, and comprehensive reporting.' }
-  ]
+    {
+      name: 'description',
+      content:
+        'Monitor and optimize your AI customer service agents with real-time analytics, performance insights, and comprehensive reporting.',
+    },
+  ],
 })
 
 const features = ref([
   {
     icon: 'solar:chart-line-duotone',
     title: 'Real-time Analytics',
-    description: 'Monitor your AI agents performance with live metrics, response times, and customer satisfaction scores.'
+    description:
+      'Monitor your AI agents performance with live metrics, response times, and customer satisfaction scores.',
   },
   {
     icon: 'solar:users-group-two-rounded-line-duotone',
     title: 'Agent Management',
-    description: 'Manage multiple AI agents, track their conversations, and optimize their responses for better customer experience.'
+    description:
+      'Manage multiple AI agents, track their conversations, and optimize their responses for better customer experience.',
   },
   {
     icon: 'solar:dollar-minimalistic-line-duotone',
     title: 'Cost Optimization',
-    description: 'Track API costs, token usage, and optimize your AI spending with detailed cost breakdowns and forecasting.'
+    description:
+      'Track API costs, token usage, and optimize your AI spending with detailed cost breakdowns and forecasting.',
   },
   {
     icon: 'solar:shield-check-line-duotone',
     title: 'Quality Assurance',
-    description: 'Ensure consistent service quality with automated monitoring, conversation analysis, and performance alerts.'
+    description:
+      'Ensure consistent service quality with automated monitoring, conversation analysis, and performance alerts.',
   },
   {
     icon: 'solar:phone-calling-rounded-line-duotone',
     title: 'Call Recording',
-    description: 'Record and analyze customer calls with AI-powered transcription and sentiment analysis for continuous improvement.'
+    description:
+      'Record and analyze customer calls with AI-powered transcription and sentiment analysis for continuous improvement.',
   },
   {
     icon: 'solar:graph-new-up-line-duotone',
     title: 'Performance Insights',
-    description: 'Get actionable insights from conversation data to improve agent responses and customer satisfaction rates.'
-  }
+    description:
+      'Get actionable insights from conversation data to improve agent responses and customer satisfaction rates.',
+  },
 ])
 
 const stats = ref([
   { value: '99.9%', label: 'Uptime Guarantee' },
-  { value: '2.3s', label: 'Avg Response Time' },
-  { value: '1000+', label: 'Active Agents' },
-  { value: '50M+', label: 'Conversations Handled' }
+  { value: '1s', label: 'Avg Response Time' },
+  { value: '2+', label: 'Active Agents' },
+  { value: '100+', label: 'Conversations Handled' },
 ])
 
 const testimonials = ref([
   {
-    quote: 'Abyssaltech.AI transformed our customer service. Our response times improved by 80% and customer satisfaction scores increased dramatically.',
+    quote:
+      'Abyssaltech.AI transformed our customer service. Our response times improved by 80% and customer satisfaction scores increased dramatically.',
     author: 'Sarah Johnson',
     role: 'Customer Success Director',
     company: 'TechCorp Solutions',
-    avatar: '/images/profile/user-1.jpg'
+    avatar: '/images/profile/user-1.jpg',
   },
   {
-    quote: 'The analytics dashboard gives us incredible insights into our AI agents performance. We can now optimize conversations in real-time.',
+    quote:
+      'The analytics dashboard gives us incredible insights into our AI agents performance. We can now optimize conversations in real-time.',
     author: 'Michael Chen',
     role: 'Operations Manager',
     company: 'Global Services Inc',
-    avatar: '/images/profile/user-2.jpg'
+    avatar: '/images/profile/user-2.jpg',
   },
   {
-    quote: 'Cost tracking and optimization features helped us reduce our AI operational costs by 40% while improving service quality.',
+    quote:
+      'Cost tracking and optimization features helped us reduce our AI operational costs by 40% while improving service quality.',
     author: 'Emily Rodriguez',
     role: 'CTO',
     company: 'StartupXYZ',
-    avatar: '/images/profile/user-3.jpg'
-  }
+    avatar: '/images/profile/user-3.jpg',
+  },
 ])
 </script>
 
@@ -106,11 +120,13 @@ const testimonials = ref([
         <div class="hero-content">
           <div class="hero-text">
             <h1 class="hero-title">
-              <span class="gradient-text">Revolutionize</span> Your Customer Service with AI Intelligence
+              <span class="gradient-text">Revolutionize</span> Your Customer Service with AI
+              Intelligence
             </h1>
             <p class="hero-subtitle">
-              Monitor, analyze, and optimize your AI customer service agents with our comprehensive dashboard. 
-              Get real-time insights, track performance metrics, and ensure exceptional customer experiences.
+              Monitor, analyze, and optimize your AI customer service agents with our comprehensive
+              dashboard. Get real-time insights, track performance metrics, and ensure exceptional
+              customer experiences.
             </p>
             <div class="hero-stats">
               <div class="stat-avatars">
@@ -119,17 +135,13 @@ const testimonials = ref([
                 </v-avatar>
               </div>
               <div class="stat-text">
-                <h6 class="stat-number">1,000+</h6>
+                <h6 class="stat-number">1+</h6>
                 <p class="stat-label">teams manage AI agents with our platform</p>
               </div>
             </div>
             <div class="hero-actions">
-              <NuxtLink to="/auth/register" class="primary-btn">
-                Start Free Trial
-              </NuxtLink>
-              <NuxtLink to="/auth/login" class="secondary-btn">
-                View Demo
-              </NuxtLink>
+              <NuxtLink to="/auth/register" class="primary-btn"> Start Free Trial </NuxtLink>
+              <NuxtLink to="/auth/login" class="secondary-btn"> View Demo </NuxtLink>
             </div>
           </div>
           <div class="hero-visual">
@@ -146,12 +158,10 @@ const testimonials = ref([
                 <div class="metric-card">
                   <div class="metric-label">Active Agents</div>
                   <div class="metric-value">24</div>
-                  <div class="metric-trend positive">+12%</div>
                 </div>
                 <div class="metric-card">
                   <div class="metric-label">Avg Response</div>
-                  <div class="metric-value">2.3s</div>
-                  <div class="metric-trend positive">-15%</div>
+                  <div class="metric-value">1.2s</div>
                 </div>
                 <div class="chart-placeholder">
                   <div class="chart-bars">
@@ -187,7 +197,8 @@ const testimonials = ref([
         <div class="section-header">
           <h2 class="section-title">Powerful Features for AI Excellence</h2>
           <p class="section-subtitle">
-            Everything you need to monitor, manage, and optimize your AI customer service agents in one comprehensive platform.
+            Everything you need to monitor, manage, and optimize your AI customer service agents in
+            one comprehensive platform.
           </p>
         </div>
         <div class="features-grid">
@@ -208,11 +219,16 @@ const testimonials = ref([
         <div class="section-header">
           <h2 class="section-title">Trusted by Industry Leaders</h2>
           <p class="section-subtitle">
-            See how companies worldwide are transforming their customer service with our AI dashboard.
+            See how companies worldwide are transforming their customer service with our AI
+            dashboard.
           </p>
         </div>
         <div class="testimonials-grid">
-          <div v-for="testimonial in testimonials" :key="testimonial.author" class="testimonial-card">
+          <div
+            v-for="testimonial in testimonials"
+            :key="testimonial.author"
+            class="testimonial-card"
+          >
             <div class="testimonial-content">
               <p class="testimonial-quote">"{{ testimonial.quote }}"</p>
               <div class="testimonial-author">
@@ -237,16 +253,13 @@ const testimonials = ref([
         <div class="cta-content">
           <h2 class="cta-title">Ready to Transform Your Customer Service?</h2>
           <p class="cta-subtitle">
-            Join thousands of companies already using Abyssaltech.AI to deliver exceptional customer experiences.
-            Start your free trial today and see the difference AI-powered insights can make.
+            Join thousands of companies already using Abyssaltech.AI to deliver exceptional customer
+            experiences. Start your free trial today and see the difference AI-powered insights can
+            make.
           </p>
           <div class="cta-actions">
-            <NuxtLink to="/auth/register" class="cta-primary">
-              Start Free Trial
-            </NuxtLink>
-            <NuxtLink to="/auth/login" class="cta-secondary">
-              Schedule Demo
-            </NuxtLink>
+            <NuxtLink to="/auth/register" class="cta-primary"> Start Free Trial </NuxtLink>
+            <NuxtLink to="/auth/login" class="cta-secondary"> Schedule Demo </NuxtLink>
           </div>
           <p class="cta-note">No credit card required • 14-day free trial • Cancel anytime</p>
         </div>
@@ -258,9 +271,14 @@ const testimonials = ref([
       <div class="footer-container">
         <div class="footer-content">
           <div class="footer-brand">
-            <img src="/images/logos/abyssaltech_logo_black.png" alt="Abyssaltech.AI" class="footer-logo" />
+            <img
+              src="/images/logos/abyssaltech_logo_black.png"
+              alt="Abyssaltech.AI"
+              class="footer-logo"
+            />
             <p class="footer-description">
-              Empowering businesses with intelligent AI customer service solutions and comprehensive monitoring tools.
+              Empowering businesses with intelligent AI customer service solutions and comprehensive
+              monitoring tools.
             </p>
           </div>
           <div class="footer-links">
@@ -301,7 +319,11 @@ const testimonials = ref([
 
 <style scoped lang="scss">
 .landing-page {
-  background: linear-gradient(135deg, rgb(var(--v-theme-background)) 0%, rgb(var(--v-theme-surface)) 100%);
+  background: linear-gradient(
+    135deg,
+    rgb(var(--v-theme-background)) 0%,
+    rgb(var(--v-theme-surface)) 100%
+  );
   min-height: 100vh;
 }
 
@@ -390,7 +412,7 @@ const testimonials = ref([
 
 .hero {
   padding: 120px 20px 80px;
-  
+
   .hero-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -419,7 +441,11 @@ const testimonials = ref([
     }
 
     .gradient-text {
-      background: linear-gradient(135deg, rgb(var(--v-theme-primary)), rgb(var(--v-theme-secondary)));
+      background: linear-gradient(
+        135deg,
+        rgb(var(--v-theme-primary)),
+        rgb(var(--v-theme-secondary))
+      );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -539,9 +565,15 @@ const testimonials = ref([
             height: 8px;
             border-radius: 50%;
 
-            &.red { background: #ff5f57; }
-            &.yellow { background: #ffbd2e; }
-            &.green { background: #28ca42; }
+            &.red {
+              background: #ff5f57;
+            }
+            &.yellow {
+              background: #ffbd2e;
+            }
+            &.green {
+              background: #28ca42;
+            }
           }
         }
 
@@ -816,7 +848,11 @@ const testimonials = ref([
 
 .cta-section {
   padding: 100px 20px;
-  background: linear-gradient(135deg, rgb(var(--v-theme-primary)), rgba(var(--v-theme-primary), 0.8));
+  background: linear-gradient(
+    135deg,
+    rgb(var(--v-theme-primary)),
+    rgba(var(--v-theme-primary), 0.8)
+  );
 
   .cta-container {
     max-width: 800px;
