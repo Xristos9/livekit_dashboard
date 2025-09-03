@@ -11,41 +11,25 @@
             </div>
 
             <div class="controls-section">
-              <!-- <input
-                v-model="prefix"
-                class="prefix-input"
-                placeholder="Optional prefix/folder (e.g. 2025-08-22/)"
-              /> -->
-              <input
-                v-model.number="jsonLimit"
-                type="number"
-                min="1"
-                max="200"
-                class="limit-input"
-                placeholder="Limit"
-              />
-
               <!-- Filter inputs -->
               <input
                 v-model="phoneFilter"
                 type="text"
-                class="phone-input"
+                class="limit-input"
                 placeholder="Filter by phone number"
               />
               <input
                 v-model="startDate"
                 type="datetime-local"
-                class="date-input"
+                class="limit-input"
                 placeholder="Start date"
               />
               <input
                 v-model="endDate"
                 type="datetime-local"
-                class="date-input"
+                class="limit-input"
                 placeholder="End date"
               />
-
-              <button @click="load({ reset: true })" class="load-button">Load</button>
             </div>
           </v-card-item>
         </v-card>
@@ -99,6 +83,6 @@ const filteredRecords = computed(() => {
 
 onMounted(() => {
   // Optional: auto-load initial batch
-  // load({ reset: true })
+  load({ reset: true })
 })
 </script>
