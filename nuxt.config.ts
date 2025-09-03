@@ -27,6 +27,10 @@ export default defineNuxtConfig({
     // Private values only available server‑side
     // (Not required for public Spaces.)
     // public values are exposed to client
+    airtable: {
+      apiKey: process.env.AIRTABLE_API_KEY,
+      baseId: process.env.AIRTABLE_BASE_ID,
+    },
     doSpaces: {
       key: process.env.NUXT_DO_SPACES_KEY,
       secret: process.env.NUXT_DO_SPACES_SECRET,
