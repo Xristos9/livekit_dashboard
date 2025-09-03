@@ -47,6 +47,8 @@ export function useSpaces() {
     }
   }
 
+  load()
+
   return {
     // state
     prefix,
