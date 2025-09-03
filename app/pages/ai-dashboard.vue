@@ -4,7 +4,6 @@ import type { KPIData } from '@/types/ai-dashboard'
 // Dashboard components
 import KPICards from '@/components/ai-dashboard/KPICards.vue'
 import CostOverTimeChart from '@/components/ai-dashboard/CostOverTimeChart.vue'
-import TokenBreakdownChart from '@/components/ai-dashboard/TokenBreakdownChart.vue'
 import DurationVsCostChart from '@/components/ai-dashboard/DurationVsCostChart.vue'
 import ModelCostChart from '@/components/ai-dashboard/ModelCostChart.vue'
 import AgentContributionChart from '@/components/ai-dashboard/AgentContributionChart.vue'
@@ -54,15 +53,12 @@ const rangeOptions = ['This Month', 'Last 30 Days', 'Custom']
         <CostOverTimeChart :sessions="sessions" />
       </v-col>
       <v-col cols="12" lg="6">
-        <TokenBreakdownChart :token-logs="tokenLogs" />
-      </v-col>
-      <v-col cols="12" lg="6">
         <DurationVsCostChart :sessions="sessions" />
       </v-col>
       <v-col cols="12" lg="6">
         <ModelCostChart :model-costs="modelCosts" />
       </v-col>
-      <v-col cols="12">
+      <v-col cols="12" lg="6">
         <AgentContributionChart :agent-costs="agentCosts" />
       </v-col>
       <v-col cols="12">
