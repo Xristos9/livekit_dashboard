@@ -4,7 +4,7 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Abyssaltech.AI Dashboard',
+  title: 'Abyssaltech.AI',
 })
 </script>
 
