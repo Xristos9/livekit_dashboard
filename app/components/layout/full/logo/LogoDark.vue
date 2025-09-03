@@ -3,7 +3,7 @@ import Logoimg from '/images/logos/abyssaltech_logo_black.png'
 </script>
 <template>
   <div class="logo">
-    <NuxtLink to="/dashboard">
+    <NuxtLink to="/ai-dashboard">
       <img :src="Logoimg" alt="home" />
     </NuxtLink>
   </div>
