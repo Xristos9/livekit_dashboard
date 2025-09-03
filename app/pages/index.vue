@@ -131,7 +131,7 @@ const testimonials = ref([
             <div class="hero-stats">
               <div class="stat-avatars">
                 <v-avatar v-for="i in 3" :key="i" size="40" class="avatar-border">
-                  <img :src="`/images/profile/user-${i}.jpg`" :alt="`User ${i}`" />
+                  <img :src="`/images/profile/user-${i}.jpg`" :alt="`User ${i}`" height="40" />
                 </v-avatar>
               </div>
               <div class="stat-text">
@@ -233,7 +233,7 @@ const testimonials = ref([
               <p class="testimonial-quote">"{{ testimonial.quote }}"</p>
               <div class="testimonial-author">
                 <v-avatar size="48" class="author-avatar">
-                  <img :src="testimonial.avatar" :alt="testimonial.author" />
+                  <img :src="testimonial.avatar" :alt="testimonial.author" height="50" />
                 </v-avatar>
                 <div class="author-info">
                   <div class="author-name">{{ testimonial.author }}</div>
