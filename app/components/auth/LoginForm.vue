@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRouter, useState } from '#imports'
+import { useRouter } from '#imports'
 
 const username = ref('')
 const password = ref('')
 const checkbox = ref(true)
 const error = ref('')
 const loading = ref(false)
-const user = useState<any | null>('user', () => null)
+const user = useUser()
 const router = useRouter()
 
 onMounted(() => {
@@ -16,23 +16,33 @@ onMounted(() => {
     username.value = savedUsername
     checkbox.value = true
   }
-  const savedUser = localStorage.getItem('userData')
-  if (savedUser) {
-    try {
-      user.value = JSON.parse(savedUser)
-    } catch {}
+  if (!user.value) {
+    const savedUser = localStorage.getItem('userData')
+    if (savedUser) {
+      try {
+        user.value = JSON.parse(savedUser)
+      } catch {}
+    }
   }
 })
 
 const login = async () => {
   error.value = ''
   try {
-    const res = await $fetch<{ success: boolean; message?: string }>('/api/login', {
+    const res = await $fetch<{ success: boolean; message?: string; user?: any }>('/api/login', {
       method: 'POST',
       credentials: 'include',
       body: { username: username.value, password: password.value },
     })
-    if (res.success) {
+    if (res.success && res.user) {
+      user.value = res.user
+      if (checkbox.value) {
+        localStorage.setItem('rememberedUsername', username.value)
+        localStorage.setItem('userData', JSON.stringify(res.user))
+      } else {
+        localStorage.removeItem('rememberedUsername')
+        localStorage.removeItem('userData')
+      }
       router.push('/ai-dashboard')
     } else {
       error.value = res.message || 'Invalid credentials'
