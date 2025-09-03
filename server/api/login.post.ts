@@ -1,5 +1,6 @@
 import { log } from 'console'
-import { defineEventHandler, readBody, createError } from 'h3'
+import { defineEventHandler, readBody, createError, setCookie } from 'h3'
+import { randomBytes } from 'crypto'
 
 export default defineEventHandler(async (event) => {
   const { username, password } = await readBody<{ username?: string; password?: string }>(event)
@@ -41,8 +42,14 @@ export default defineEventHandler(async (event) => {
   const record = Array.isArray(data.records) ? data.records[0] : null
 
   if (record && record.fields?.Password === password) {
-    const { Password, ...user } = record.fields
-    return { success: true, user }
+    const token = randomBytes(16).toString('hex')
+    setCookie(event, 'session', token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60, // 1 hour
+    })
+    return { success: true }
   }
 
   return { success: false, message: 'Invalid credentials' }

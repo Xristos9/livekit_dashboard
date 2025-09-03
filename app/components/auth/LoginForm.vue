@@ -25,32 +25,20 @@ onMounted(() => {
 })
 
 const login = async () => {
-  if (loading.value) return
-  loading.value = true
   error.value = ''
   try {
-    const res = await $fetch<{ success: boolean; message?: string; user?: any }>('/api/login', {
+    const res = await $fetch<{ success: boolean; message?: string }>('/api/login', {
       method: 'POST',
+      credentials: 'include',
       body: { username: username.value, password: password.value },
     })
-    if (res.success && res.user) {
-      const { Password, ...sanitized } = res.user
-      user.value = sanitized
-      if (checkbox.value) {
-        localStorage.setItem('rememberedUsername', username.value)
-        localStorage.setItem('userData', JSON.stringify(sanitized))
-      } else {
-        localStorage.removeItem('rememberedUsername')
-        localStorage.removeItem('userData')
-      }
-      router.push('/dashboard')
+    if (res.success) {
+      router.push('/ai-dashboard')
     } else {
       error.value = res.message || 'Invalid credentials'
     }
   } catch (e: any) {
     error.value = e?.statusMessage || 'Login failed'
-  } finally {
-    loading.value = false
   }
 }
 </script>
