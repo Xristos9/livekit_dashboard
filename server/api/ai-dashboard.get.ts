@@ -72,11 +72,20 @@ export default defineEventHandler(async (event) => {
     const date = start ? new Date(start).toISOString().split('T')[0] : ''
     const reason = typeof f['Call Reason'] === 'string' ? f['Call Reason'] : 'Unknown'
     callReasonMap[reason] = (callReasonMap[reason] || 0) + 1
+
+    const agents = Array.from(
+      new Set(
+        logIds
+          .map((id: string) => logMap.get(id)?.fields?.['Agent Name'])
+          .filter((a): a is string => typeof a === 'string')
+      )
+    )
+
     return {
       id: f['Session ID'] || rec.id,
       date,
       duration: Number(f['Duration (s)'] ?? f['Calculated Duration (s)'] ?? 0),
-      agent: firstLog?.fields?.['Agent Name'] || '-',
+      agents,
       model: firstLog?.fields?.['Model'] || '-',
       cost: Number(f['Total Cost (USD)'] ?? 0),
       callReason: reason,
