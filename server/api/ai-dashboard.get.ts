@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
   }
   let customerId: string | undefined
   try {
-    customerId = JSON.parse(userCookie).id
+    customerId = JSON.parse(userCookie).recID
   } catch {}
   if (!customerId) {
     throw createError({ statusCode: 401, statusMessage: 'Invalid user cookie' })
@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
   const sessionFilter = `FIND('${customerId}', {Customer})`
   const sessionRecords = await fetchAll(sessionsTable, sessionFilter)
 
-  const sessionIds = sessionRecords.map((r: any) => r.id)
+  const sessionIds = sessionRecords.map((r: any) => r.fields?.['Session ID'])
   let logRecords: any[] = []
   if (sessionIds.length > 0) {
     const logFilter =
