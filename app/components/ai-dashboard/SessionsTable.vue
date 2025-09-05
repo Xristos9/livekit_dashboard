@@ -40,12 +40,7 @@ function formatUSD(n: number) {
         <tbody>
           <tr v-for="session in paginatedSessions" :key="session.id">
             <td>
-              <v-chip 
-                size="small" 
-                variant="tonal" 
-                color="primary"
-                class="session-badge"
-              >
+              <v-chip size="small" variant="tonal" color="primary" class="session-badge">
                 {{ session.id }}
               </v-chip>
             </td>
@@ -57,7 +52,7 @@ function formatUSD(n: number) {
           </tr>
         </tbody>
       </v-table>
-      <div class="d-flex justify-center mt-4">
+      <div class="d-flex mt-4 justify-center">
         <v-pagination v-model="page" :length="pageCount" density="comfortable" />
       </div>
     </v-card-item>

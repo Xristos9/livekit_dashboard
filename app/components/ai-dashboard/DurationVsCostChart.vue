@@ -12,11 +12,9 @@ const series = computed(() => [
     name: 'Sessions',
     data: (props.sessions ?? []).map((s) => ({ x: s.duration, y: s.cost })),
   },
-
 ])
 
 // console.log('Duration vs Cost series:', series.value)
-
 
 const chartOptions = computed(() => ({
   chart: {
@@ -78,7 +76,6 @@ const chartOptions = computed(() => ({
   markers: { size: 4 },
   noData: { text: 'No data' },
 }))
-
 </script>
 
 <template>
@@ -86,12 +83,7 @@ const chartOptions = computed(() => ({
     <v-card-item>
       <v-card-title class="text-h5">Session Duration vs Cost</v-card-title>
       <div class="mx-3 mt-4 pt-2">
-        <apexchart
-          type="scatter"
-          height="320"
-          :options="chartOptions"
-          :series="series"
-        />
+        <apexchart type="scatter" height="320" :options="chartOptions" :series="series" />
       </div>
     </v-card-item>
   </v-card>

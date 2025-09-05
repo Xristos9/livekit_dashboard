@@ -10,7 +10,6 @@ const series = computed(() => [
   { name: 'Total Cost', data: (props.modelCosts ?? []).map((m) => m.cost) },
 ])
 
-
 const chartOptions = computed(() => ({
   chart: {
     type: 'bar',

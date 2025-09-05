@@ -5,8 +5,8 @@ const props = defineProps<{
   reasons: CallReason[]
 }>()
 
-const labels = computed(() => (props.reasons ?? []).map(r => r.reason))
-const series = computed(() => (props.reasons ?? []).map(r => r.count))
+const labels = computed(() => (props.reasons ?? []).map((r) => r.reason))
+const series = computed(() => (props.reasons ?? []).map((r) => r.count))
 
 const chartOptions = computed(() => ({
   chart: {
@@ -32,7 +32,8 @@ const chartOptions = computed(() => ({
     'rgba(var(--v-theme-info))',
   ],
   dataLabels: {
-    formatter: (_: any, opts: any) => `${opts.w.globals.seriesPercent[opts.seriesIndex][0].toFixed(1)}%`,
+    formatter: (_: any, opts: any) =>
+      `${opts.w.globals.seriesPercent[opts.seriesIndex][0].toFixed(1)}%`,
   },
   stroke: { colors: ['rgba(var(--v-theme-surface))'], width: 2 },
   noData: { text: 'No data' },
@@ -44,15 +45,8 @@ const chartOptions = computed(() => ({
     <v-card-item>
       <v-card-title class="text-h6 mb-3">Call Reasons</v-card-title>
       <div class="mx-3 mt-4 pt-2 pb-3">
-        <apexchart
-          type="donut"
-          height="320"
-          :options="chartOptions"
-          :series="series"
-        />
+        <apexchart type="donut" height="320" :options="chartOptions" :series="series" />
       </div>
     </v-card-item>
   </v-card>
 </template>
-
-

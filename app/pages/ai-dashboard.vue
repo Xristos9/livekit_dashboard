@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import type { Session, TokenLog, ModelCost, AgentCost, CallReason, KPIData } from '@/types/ai-dashboard'
-// Dashboard components
-import KPICards from '@/components/ai-dashboard/KPICards.vue'
-import CostOverTimeChart from '@/components/ai-dashboard/CostOverTimeChart.vue'
-import DurationVsCostChart from '@/components/ai-dashboard/DurationVsCostChart.vue'
-import ModelCostChart from '@/components/ai-dashboard/ModelCostChart.vue'
-import AgentContributionChart from '@/components/ai-dashboard/AgentContributionChart.vue'
-import CallReasonChart from '@/components/ai-dashboard/CallReasonChart.vue'
-import SessionsTable from '@/components/ai-dashboard/SessionsTable.vue'
+import type {
+  Session,
+  TokenLog,
+  ModelCost,
+  AgentCost,
+  CallReason,
+  KPIData,
+} from '@/types/ai-dashboard'
 
-const { data } = await useFetch<{ sessions: Session[]; tokenLogs: TokenLog[]; modelCosts: ModelCost[]; agentCosts: AgentCost[]; callReasons: CallReason[] }>(
-  '/api/ai-dashboard'
-)
+const { data } = await useFetch<{
+  sessions: Session[]
+  tokenLogs: TokenLog[]
+  modelCosts: ModelCost[]
+  agentCosts: AgentCost[]
+  callReasons: CallReason[]
+}>('/api/ai-dashboard')
 
 const sessions = computed(() => data.value?.sessions ?? [])
 const _tokenLogs = computed(() => data.value?.tokenLogs ?? [])
@@ -23,7 +26,9 @@ const callReasons = computed(() => data.value?.callReasons ?? [])
 const kpiData = computed<KPIData>(() => {
   const totalSessions = sessions.value.length
   const totalCost = sessions.value.reduce((acc, s) => acc + s.cost, 0)
-  const avgDuration = totalSessions ? sessions.value.reduce((acc, s) => acc + s.duration, 0) / totalSessions : 0
+  const avgDuration = totalSessions
+    ? sessions.value.reduce((acc, s) => acc + s.duration, 0) / totalSessions
+    : 0
   const avgCostPerSession = totalSessions ? totalCost / totalSessions : 0
 
   return {
@@ -61,22 +66,22 @@ const rangeOptions = ['This Month', 'Last 30 Days', 'Custom']
     <!-- Charts Grid -->
     <v-row class="charts-grid">
       <v-col cols="12" lg="6">
-        <CostOverTimeChart :sessions="sessions" />
+        <AiDashboardCostOverTimeChart :sessions="sessions" />
       </v-col>
       <v-col cols="12" lg="6">
-        <DurationVsCostChart :sessions="sessions" />
+        <AiDashboardDurationVsCostChart :sessions="sessions" />
       </v-col>
       <v-col cols="12" lg="6">
-        <ModelCostChart :model-costs="modelCosts" />
+        <AiDashboardModelCostChart :model-costs="modelCosts" />
       </v-col>
       <v-col cols="12" lg="6">
-        <AgentContributionChart :agent-costs="agentCosts" />
+        <AiDashboardAgentContributionChart :agent-costs="agentCosts" />
       </v-col>
       <v-col cols="12">
-        <CallReasonChart :reasons="callReasons" />
+        <AiDashboardCallReasonChart :reasons="callReasons" />
       </v-col>
       <v-col cols="12">
-        <SessionsTable :sessions="sessions" />
+        <AiDashboardSessionsTable :sessions="sessions" />
       </v-col>
     </v-row>
   </div>

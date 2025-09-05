@@ -51,7 +51,6 @@ function formatDateLabel(dateStr: string): string {
   return `${day} ${mon}`.trim()
 }
 
-
 const series = computed(() => [
   {
     name: 'Total Cost (USD)',
