@@ -2,7 +2,7 @@ export interface Session {
   id: string
   date: string
   duration: number
-  agent: string
+  agents: string[]
   model: string
   cost: number
   callReason: string

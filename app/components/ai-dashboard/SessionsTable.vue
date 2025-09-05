@@ -9,6 +9,14 @@ const sortedSessions = computed(() => {
   return [...props.sessions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 })
 
+const page = ref(1)
+const itemsPerPage = 5
+const pageCount = computed(() => Math.ceil(sortedSessions.value.length / itemsPerPage))
+const paginatedSessions = computed(() => {
+  const start = (page.value - 1) * itemsPerPage
+  return sortedSessions.value.slice(start, start + itemsPerPage)
+})
+
 function formatUSD(n: number) {
   return `$${n.toFixed(3)}`
 }
@@ -24,13 +32,13 @@ function formatUSD(n: number) {
             <th>Session ID</th>
             <th>Date</th>
             <th>Duration (s)</th>
-            <th>Agent</th>
+            <th>Agents</th>
             <th>Model</th>
             <th>Cost (USD)</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="session in sortedSessions" :key="session.id">
+          <tr v-for="session in paginatedSessions" :key="session.id">
             <td>
               <v-chip 
                 size="small" 
@@ -43,12 +51,15 @@ function formatUSD(n: number) {
             </td>
             <td>{{ session.date }}</td>
             <td>{{ session.duration }}</td>
-            <td>{{ session.agent }}</td>
+            <td>{{ session.agents.join(', ') }}</td>
             <td>{{ session.model }}</td>
             <td>{{ formatUSD(session.cost) }}</td>
           </tr>
         </tbody>
       </v-table>
+      <div class="d-flex justify-center mt-4">
+        <v-pagination v-model="page" :length="pageCount" density="comfortable" />
+      </div>
     </v-card-item>
   </v-card>
 </template>
