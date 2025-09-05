@@ -1,7 +1,7 @@
-import { defineEventHandler, createError } from 'h3'
+import { defineEventHandler, createError, getCookie } from 'h3'
 import type { Session, TokenLog, ModelCost, AgentCost } from '@/types/ai-dashboard'
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const apiKey = config.airtable?.apiKey
   const baseId = config.airtable?.baseId
@@ -12,12 +12,13 @@ export default defineEventHandler(async () => {
     throw createError({ statusCode: 500, statusMessage: 'Airtable credentials not configured' })
   }
 
-  async function fetchAll(table: string) {
+  async function fetchAll(table: string, filter?: string) {
     const records: any[] = []
     let offset: string | undefined
     do {
       const url = new URL(`https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}`)
       if (offset) url.searchParams.set('offset', offset)
+      if (filter) url.searchParams.set('filterByFormula', filter)
       const resp = await fetch(url.toString(), {
         headers: { Authorization: `Bearer ${apiKey}` },
       })
@@ -31,10 +32,30 @@ export default defineEventHandler(async () => {
     return records
   }
 
-  const [sessionRecords, logRecords] = await Promise.all([
-    fetchAll(sessionsTable),
-    fetchAll(agentLogsTable),
-  ])
+  const userCookie = getCookie(event, 'user')
+  if (!userCookie) {
+    throw createError({ statusCode: 401, statusMessage: 'Not authenticated' })
+  }
+  let customerId: string | undefined
+  try {
+    customerId = JSON.parse(userCookie).id
+  } catch {}
+  if (!customerId) {
+    throw createError({ statusCode: 401, statusMessage: 'Invalid user cookie' })
+  }
+
+  const sessionFilter = `FIND('${customerId}', {Customer})`
+  const sessionRecords = await fetchAll(sessionsTable, sessionFilter)
+
+  const sessionIds = sessionRecords.map((r: any) => r.id)
+  let logRecords: any[] = []
+  if (sessionIds.length > 0) {
+    const logFilter =
+      sessionIds.length === 1
+        ? `FIND('${sessionIds[0]}', {Session})`
+        : `OR(${sessionIds.map((id: string) => `FIND('${id}', {Session})`).join(',')})`
+    logRecords = await fetchAll(agentLogsTable, logFilter)
+  }
 
   const logMap = new Map<string, any>()
   for (const log of logRecords) {
