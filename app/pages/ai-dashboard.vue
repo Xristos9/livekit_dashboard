@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { sessions, tokenLogs, modelCosts, agentCosts } from '@/data/ai-dashboard/mockData'
-import type { KPIData } from '@/types/ai-dashboard'
+import type { Session, TokenLog, ModelCost, AgentCost, KPIData } from '@/types/ai-dashboard'
 // Dashboard components
 import KPICards from '@/components/ai-dashboard/KPICards.vue'
 import CostOverTimeChart from '@/components/ai-dashboard/CostOverTimeChart.vue'
@@ -8,12 +7,22 @@ import DurationVsCostChart from '@/components/ai-dashboard/DurationVsCostChart.v
 import ModelCostChart from '@/components/ai-dashboard/ModelCostChart.vue'
 import AgentContributionChart from '@/components/ai-dashboard/AgentContributionChart.vue'
 import SessionsTable from '@/components/ai-dashboard/SessionsTable.vue'
+
+const { data } = await useFetch<{ sessions: Session[]; tokenLogs: TokenLog[]; modelCosts: ModelCost[]; agentCosts: AgentCost[] }>(
+  '/api/ai-dashboard'
+)
+
+const sessions = computed(() => data.value?.sessions ?? [])
+const _tokenLogs = computed(() => data.value?.tokenLogs ?? [])
+const modelCosts = computed(() => data.value?.modelCosts ?? [])
+const agentCosts = computed(() => data.value?.agentCosts ?? [])
+
 // Calculate KPIs
 const kpiData = computed<KPIData>(() => {
-  const totalSessions = sessions.length
-  const totalCost = sessions.reduce((acc, s) => acc + s.cost, 0)
-  const avgDuration = sessions.reduce((acc, s) => acc + s.duration, 0) / totalSessions
-  const avgCostPerSession = totalCost / totalSessions
+  const totalSessions = sessions.value.length
+  const totalCost = sessions.value.reduce((acc, s) => acc + s.cost, 0)
+  const avgDuration = totalSessions ? sessions.value.reduce((acc, s) => acc + s.duration, 0) / totalSessions : 0
+  const avgCostPerSession = totalSessions ? totalCost / totalSessions : 0
 
   return {
     totalSessions,

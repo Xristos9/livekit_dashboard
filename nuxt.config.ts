@@ -32,6 +32,8 @@ export default defineNuxtConfig({
       apiKey: process.env.AIRTABLE_API_KEY,
       baseId: process.env.AIRTABLE_BASE_ID,
       tableName: process.env.AIRTABLE_USERS_TABLE || 'Customers',
+      sessionsTable: process.env.AIRTABLE_SESSIONS_TABLE || 'Sessions',
+      agentLogsTable: process.env.AIRTABLE_AGENT_LOGS_TABLE || 'Agent Logs',
     },
     doSpaces: {
       key: process.env.NUXT_DO_SPACES_KEY,
