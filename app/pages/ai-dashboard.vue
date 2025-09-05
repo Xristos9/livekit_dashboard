@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import type { Session, TokenLog, ModelCost, AgentCost, KPIData } from '@/types/ai-dashboard'
+import type { Session, TokenLog, ModelCost, AgentCost, CallReason, KPIData } from '@/types/ai-dashboard'
 // Dashboard components
 import KPICards from '@/components/ai-dashboard/KPICards.vue'
 import CostOverTimeChart from '@/components/ai-dashboard/CostOverTimeChart.vue'
 import DurationVsCostChart from '@/components/ai-dashboard/DurationVsCostChart.vue'
 import ModelCostChart from '@/components/ai-dashboard/ModelCostChart.vue'
 import AgentContributionChart from '@/components/ai-dashboard/AgentContributionChart.vue'
+import CallReasonChart from '@/components/ai-dashboard/CallReasonChart.vue'
 import SessionsTable from '@/components/ai-dashboard/SessionsTable.vue'
 
-const { data } = await useFetch<{ sessions: Session[]; tokenLogs: TokenLog[]; modelCosts: ModelCost[]; agentCosts: AgentCost[] }>(
+const { data } = await useFetch<{ sessions: Session[]; tokenLogs: TokenLog[]; modelCosts: ModelCost[]; agentCosts: AgentCost[]; callReasons: CallReason[] }>(
   '/api/ai-dashboard'
 )
 
@@ -16,6 +17,7 @@ const sessions = computed(() => data.value?.sessions ?? [])
 const _tokenLogs = computed(() => data.value?.tokenLogs ?? [])
 const modelCosts = computed(() => data.value?.modelCosts ?? [])
 const agentCosts = computed(() => data.value?.agentCosts ?? [])
+const callReasons = computed(() => data.value?.callReasons ?? [])
 
 // Calculate KPIs
 const kpiData = computed<KPIData>(() => {
@@ -69,6 +71,9 @@ const rangeOptions = ['This Month', 'Last 30 Days', 'Custom']
       </v-col>
       <v-col cols="12" lg="6">
         <AgentContributionChart :agent-costs="agentCosts" />
+      </v-col>
+      <v-col cols="12">
+        <CallReasonChart :reasons="callReasons" />
       </v-col>
       <v-col cols="12">
         <SessionsTable :sessions="sessions" />

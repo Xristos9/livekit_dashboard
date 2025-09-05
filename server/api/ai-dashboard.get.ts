@@ -1,5 +1,5 @@
 import { defineEventHandler, createError, getCookie } from 'h3'
-import type { Session, TokenLog, ModelCost, AgentCost } from '@/types/ai-dashboard'
+import type { Session, TokenLog, ModelCost, AgentCost, CallReason } from '@/types/ai-dashboard'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
@@ -62,12 +62,16 @@ export default defineEventHandler(async (event) => {
     logMap.set(log.id, log)
   }
 
+  const callReasonMap: Record<string, number> = {}
+
   const sessions: Session[] = sessionRecords.map((rec: any) => {
     const f = rec.fields || {}
     const logIds: string[] = Array.isArray(f['Agent Logs']) ? f['Agent Logs'] : []
     const firstLog = logIds.length > 0 ? logMap.get(logIds[0]) : undefined
     const start = f['Start Time']
     const date = start ? new Date(start).toISOString().split('T')[0] : ''
+    const reason = typeof f['Call Reason'] === 'string' ? f['Call Reason'] : 'Unknown'
+    callReasonMap[reason] = (callReasonMap[reason] || 0) + 1
     return {
       id: f['Session ID'] || rec.id,
       date,
@@ -75,6 +79,7 @@ export default defineEventHandler(async (event) => {
       agent: firstLog?.fields?.['Agent Name'] || '-',
       model: firstLog?.fields?.['Model'] || '-',
       cost: Number(f['Total Cost (USD)'] ?? 0),
+      callReason: reason,
     }
   })
 
@@ -116,5 +121,8 @@ export default defineEventHandler(async (event) => {
     cost,
   }))
 
-  return { sessions, tokenLogs, modelCosts, agentCosts }
+  const callReasons: CallReason[] = Object.entries(callReasonMap).map(([reason, count]) => ({ reason, count }))
+
+  return { sessions, tokenLogs, modelCosts, agentCosts, callReasons }
+
 })
