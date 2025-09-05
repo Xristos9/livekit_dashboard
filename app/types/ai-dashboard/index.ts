@@ -5,6 +5,7 @@ export interface Session {
   agent: string
   model: string
   cost: number
+  callReason: string
 }
 
 export interface TokenLog {
@@ -22,6 +23,11 @@ export interface ModelCost {
 export interface AgentCost {
   agent: string
   cost: number
+}
+
+export interface CallReason {
+  reason: string
+  count: number
 }
 
 export interface KPIData {

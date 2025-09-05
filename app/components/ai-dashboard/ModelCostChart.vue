@@ -9,7 +9,6 @@ const categories = computed(() => (props.modelCosts ?? []).map((m) => m.model))
 const series = computed(() => [
   { name: 'Total Cost', data: (props.modelCosts ?? []).map((m) => m.cost) },
 ])
-console.log(series.value);
 
 
 const chartOptions = computed(() => ({
