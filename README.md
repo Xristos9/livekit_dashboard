@@ -73,3 +73,16 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## DigitalOcean App Platform
+
+To deploy on [DigitalOcean App Platform](https://www.digitalocean.com/products/app-platform):
+
+1. Push this repository to your own GitHub account.
+2. In the DigitalOcean control panel create a new **App** and point it at your repository.
+3. Use the following settings when prompted:
+   - **Build command:** `npm install && npm run build`
+   - **Run command:** `npm start`
+4. Ensure any required environment variables (such as `AIRTABLE_API_KEY` or `NUXT_DO_SPACES_KEY`) are added in the App Platform dashboard.
+
+DigitalOcean automatically sets the `PORT` environment variable used by the Nuxt server, so no additional port configuration is necessary.
