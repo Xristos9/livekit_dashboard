@@ -44,6 +44,7 @@ export default defineEventHandler(async (event) => {
   if (record && record.fields?.Password === password) {
     const userData = {
       id: record.id,
+      recID: record.fields?.ID,
       name: record.fields?.Name,
       email: record.fields?.Email,
       trunkId: record.fields?.['Trunk ID'],
@@ -52,7 +53,6 @@ export default defineEventHandler(async (event) => {
       totalCostUSD: record.fields?.['Total Cost (USD)'],
       averageSessionDuration: record.fields?.['Average Session Duration (s)'],
       username: record.fields?.Username,
-      password: record.fields?.Password,
     }
 
     // store user information in a cookie accessible on client
