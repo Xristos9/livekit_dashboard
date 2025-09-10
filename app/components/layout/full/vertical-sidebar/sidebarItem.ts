@@ -23,6 +23,11 @@ const sidebarItem: menu[] = [
     to: '/ai-dashboard',
   },
   {
+    title: 'Cold Calling',
+    icon: 'phone-calling-rounded-line-duotone',
+    to: '/cold-calling',
+  },
+  {
     title: 'Recordings',
     icon: 'planet-3-line-duotone',
     to: '/livekit-dashboard',
