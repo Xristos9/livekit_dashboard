@@ -28,6 +28,11 @@ const sidebarItem: menu[] = [
     to: '/cold-calling',
   },
   {
+    title: 'Outbound Dialer',
+    icon: 'phone-outgoing-line-duotone',
+    to: '/outbound-dialer',
+  },
+  {
     title: 'Recordings',
     icon: 'planet-3-line-duotone',
     to: '/livekit-dashboard',
