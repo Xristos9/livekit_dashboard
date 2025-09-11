@@ -94,7 +94,7 @@ const login = async () => {
       <v-alert type="error" density="compact" variant="tonal">{{ error }}</v-alert>
     </v-col>
     <v-col cols="12" class="pt-0">
-            <v-btn to="/" color="primary" size="large" block flat>Sign in</v-btn>
+            <v-btn to="/ai-dashboard" color="primary" size="large" block flat>Sign in</v-btn>
 
     </v-col>
   </v-row>
