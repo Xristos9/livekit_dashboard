@@ -17,10 +17,7 @@ const chartOptions = computed(() => ({
     markers: { width: 12, height: 12 },
     fontSize: '14px',
   },
-  colors: [
-    'rgba(var(--v-theme-success))',
-    'rgba(var(--v-theme-error))',
-  ],
+  colors: ['rgba(var(--v-theme-success))', 'rgba(var(--v-theme-error))'],
   stroke: { colors: ['rgba(var(--v-theme-surface))'], width: 2 },
   dataLabels: {
     enabled: true,
@@ -58,7 +55,7 @@ const series = computed(() => [props.stats.callbacks, props.stats.negative])
   <v-card elevation="10" class="stats-card">
     <v-card-item>
       <v-card-title class="text-h6 mb-4">Call Success Rate</v-card-title>
-      
+
       <!-- Summary Stats -->
       <v-row class="mb-4">
         <v-col cols="12" sm="4">
@@ -85,12 +82,7 @@ const series = computed(() => [props.stats.callbacks, props.stats.negative])
 
       <!-- Chart -->
       <div class="chart-container">
-        <apexchart
-          type="donut"
-          height="300"
-          :options="chartOptions"
-          :series="series"
-        />
+        <apexchart type="donut" height="300" :options="chartOptions" :series="series" />
       </div>
     </v-card-item>
   </v-card>
@@ -130,11 +122,11 @@ const series = computed(() => [props.stats.callbacks, props.stats.negative])
     .stat-percentage {
       font-size: 0.75rem;
       font-weight: 600;
-      
+
       .success & {
         color: rgb(var(--v-theme-success));
       }
-      
+
       .error & {
         color: rgb(var(--v-theme-error));
       }

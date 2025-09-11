@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import type { Lead, Agent, ActiveCall, ActivityLogEntry, DialerStats, CSVMapping } from '@/types/dialer'
+import type {
+  Lead,
+  Agent,
+  ActiveCall,
+  ActivityLogEntry,
+  DialerStats,
+  CSVMapping,
+} from '@/types/dialer'
 import Papa from 'papaparse'
 
 useHead({
@@ -7,7 +14,8 @@ useHead({
   meta: [
     {
       name: 'description',
-      content: 'Manage outbound AI calling campaigns with real-time monitoring and lead management.',
+      content:
+        'Manage outbound AI calling campaigns with real-time monitoring and lead management.',
     },
   ],
 })
@@ -20,22 +28,22 @@ const agents = ref<Agent[]>([
     id: 'agent-1',
     name: 'AI Agent Alpha',
     status: 'idle',
-    capacity: 3,
+    capacity: 1,
     callerId: '+1234567890',
     voicemailDrop: true,
     timezone: 'Europe/Athens',
-    currentCalls: 0
+    currentCalls: 0,
   },
   {
     id: 'agent-2',
     name: 'AI Agent Beta',
     status: 'idle',
-    capacity: 2,
+    capacity: 1,
     callerId: '+1234567891',
     voicemailDrop: false,
     timezone: 'Europe/Athens',
-    currentCalls: 0
-  }
+    currentCalls: 0,
+  },
 ])
 const activeCalls = ref<ActiveCall[]>([])
 const activityLog = ref<ActivityLogEntry[]>([])
@@ -43,7 +51,7 @@ const activityLog = ref<ActivityLogEntry[]>([])
 // Dialer state
 const isRunning = ref(false)
 const isPaused = ref(false)
-const globalConcurrency = ref(5)
+const globalConcurrency = ref(1)
 
 // CSV import
 const showMappingDialog = ref(false)
@@ -52,11 +60,11 @@ const csvData = ref<any[]>([])
 
 // Computed
 const stats = computed<DialerStats>(() => {
-  const queued = leads.value.filter(l => l.status === 'queued').length
-  const active = leads.value.filter(l => ['dialing', 'in-call'].includes(l.status)).length
-  const completed = leads.value.filter(l => l.status === 'completed').length
-  const failed = leads.value.filter(l => l.status === 'failed').length
-  const skipped = leads.value.filter(l => l.status === 'skipped').length
+  const queued = leads.value.filter((l) => l.status === 'queued').length
+  const active = leads.value.filter((l) => ['dialing', 'in-call'].includes(l.status)).length
+  const completed = leads.value.filter((l) => l.status === 'completed').length
+  const failed = leads.value.filter((l) => l.status === 'failed').length
+  const skipped = leads.value.filter((l) => l.status === 'skipped').length
   const total = leads.value.length
 
   return { queued, active, completed, failed, skipped, total }
@@ -64,7 +72,9 @@ const stats = computed<DialerStats>(() => {
 
 const progress = computed(() => {
   if (stats.value.total === 0) return 0
-  return ((stats.value.completed + stats.value.failed + stats.value.skipped) / stats.value.total) * 100
+  return (
+    ((stats.value.completed + stats.value.failed + stats.value.skipped) / stats.value.total) * 100
+  )
 })
 
 // Methods
@@ -82,23 +92,27 @@ const handleUploadCsv = (file: File) => {
     error: (error) => {
       console.error('CSV parsing error:', error)
       // Add error handling UI here
-    }
+    },
   })
 }
 
 const handleCsvMapping = (mapping: CSVMapping) => {
-  const newLeads: Lead[] = csvData.value.map((row, index) => ({
-    id: `lead-${Date.now()}-${index}`,
-    phone: row[mapping.phone] || '',
-    firstName: mapping.firstName ? row[mapping.firstName] : undefined,
-    lastName: mapping.lastName ? row[mapping.lastName] : undefined,
-    company: mapping.company ? row[mapping.company] : undefined,
-    status: 'queued',
-    createdAt: new Date().toISOString()
-  })).filter(lead => lead.phone) // Only include leads with phone numbers
+  const newLeads: Lead[] = csvData.value
+    .map(
+      (row, index): Lead => ({
+        id: `lead-${Date.now()}-${index}`,
+        phone: row[mapping.phone] || '',
+        firstName: mapping.firstName ? row[mapping.firstName] : undefined,
+        lastName: mapping.lastName ? row[mapping.lastName] : undefined,
+        company: mapping.company ? row[mapping.company] : undefined,
+        status: 'queued',
+        createdAt: new Date().toISOString(),
+      })
+    )
+    .filter((lead) => lead.phone) // Only include leads with phone numbers
 
   leads.value = [...leads.value, ...newLeads]
-  
+
   // Add activity log entry
   addActivityLog('start', `Imported ${newLeads.length} leads from CSV`)
 }
@@ -113,7 +127,7 @@ const handleLoadFromSource = (sourceId: string) => {
       lastName: 'Doe',
       company: 'Acme Corp',
       status: 'queued',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     },
     {
       id: 'lead-mock-2',
@@ -122,8 +136,8 @@ const handleLoadFromSource = (sourceId: string) => {
       lastName: 'Smith',
       company: 'Tech Solutions',
       status: 'queued',
-      createdAt: new Date().toISOString()
-    }
+      createdAt: new Date().toISOString(),
+    },
   ]
 
   leads.value = [...leads.value, ...mockLeads]
@@ -140,11 +154,11 @@ const handleBulkAction = (action: string, leadIds: string[]) => {
       addActivityLog('stop', 'Cleared all leads')
       break
     case 'keep-selected':
-      leads.value = leads.value.filter(lead => leadIds.includes(lead.id))
+      leads.value = leads.value.filter((lead) => leadIds.includes(lead.id))
       addActivityLog('start', `Kept ${leadIds.length} selected leads`)
       break
     case 'skip-selected':
-      leads.value = leads.value.map(lead => 
+      leads.value = leads.value.map((lead) =>
         leadIds.includes(lead.id) ? { ...lead, status: 'skipped' as const } : lead
       )
       addActivityLog('pause', `Skipped ${leadIds.length} leads`)
@@ -153,7 +167,7 @@ const handleBulkAction = (action: string, leadIds: string[]) => {
 }
 
 const updateAgent = (updatedAgent: Agent) => {
-  const index = agents.value.findIndex(a => a.id === updatedAgent.id)
+  const index = agents.value.findIndex((a) => a.id === updatedAgent.id)
   if (index >= 0) {
     agents.value[index] = updatedAgent
   }
@@ -162,12 +176,12 @@ const updateAgent = (updatedAgent: Agent) => {
 const handleStart = () => {
   isRunning.value = true
   isPaused.value = false
-  
+
   // Update agent statuses
-  agents.value = agents.value.map(agent => ({ ...agent, status: 'calling' }))
-  
+  agents.value = agents.value.map((agent) => ({ ...agent, status: 'calling' }))
+
   addActivityLog('start', 'Started dialing session')
-  
+
   // Mock some dialing activity
   simulateDialing()
 }
@@ -186,18 +200,18 @@ const handleResume = () => {
 const handleStop = () => {
   isRunning.value = false
   isPaused.value = false
-  
+
   // Update agent statuses
-  agents.value = agents.value.map(agent => ({ ...agent, status: 'idle', currentCalls: 0 }))
-  
+  agents.value = agents.value.map((agent) => ({ ...agent, status: 'idle', currentCalls: 0 }))
+
   // Clear active calls
   activeCalls.value = []
-  
+
   // Reset queued leads
-  leads.value = leads.value.map(lead => 
+  leads.value = leads.value.map((lead) =>
     ['dialing', 'in-call'].includes(lead.status) ? { ...lead, status: 'queued' } : lead
   )
-  
+
   addActivityLog('stop', 'Stopped dialing session')
 }
 
@@ -211,10 +225,10 @@ const addActivityLog = (type: ActivityLogEntry['type'], message: string) => {
     id: `activity-${Date.now()}`,
     timestamp: new Date().toISOString(),
     type,
-    message
+    message,
   }
   activityLog.value.unshift(entry)
-  
+
   // Keep only last 100 entries
   if (activityLog.value.length > 100) {
     activityLog.value = activityLog.value.slice(0, 100)
@@ -224,41 +238,53 @@ const addActivityLog = (type: ActivityLogEntry['type'], message: string) => {
 // Mock dialing simulation
 const simulateDialing = () => {
   if (!isRunning.value || isPaused.value) return
-  
-  const queuedLeads = leads.value.filter(l => l.status === 'queued')
+
+  const queuedLeads = leads.value.filter((l) => l.status === 'queued')
   if (queuedLeads.length === 0) {
     handleStop()
     return
   }
-  
+
   // Simulate some calls
-  const availableSlots = Math.min(globalConcurrency.value - activeCalls.value.length, queuedLeads.length)
-  
+  const availableSlots = Math.min(
+    globalConcurrency.value - activeCalls.value.length,
+    queuedLeads.length
+  )
+
   for (let i = 0; i < availableSlots; i++) {
     const lead = queuedLeads[i]
     if (lead) {
       // Start dialing
       lead.status = 'dialing'
-      
+
+      const agent = agents.value[i % (agents.value.length || 1)]
+      if (!agent) {
+        addActivityLog('failure', 'No available agents to assign call')
+        continue
+      }
+
       const activeCall: ActiveCall = {
         id: `call-${Date.now()}-${i}`,
         phone: lead.phone,
         leadName: `${lead.firstName || ''} ${lead.lastName || ''}`.trim() || 'Unknown',
         status: 'dialing',
         startedAt: new Date().toISOString(),
-        agentId: agents.value[i % agents.value.length].id
+        agentId: agent.id,
       }
-      
+
       activeCalls.value.push(activeCall)
       addActivityLog('dial', `Dialing ${lead.phone}`)
-      
+
       // Simulate call completion after random time
-      setTimeout(() => {
-        completeCall(activeCall.id, lead.id)
-      }, Math.random() * 10000 + 5000) // 5-15 seconds
+      setTimeout(
+        () => {
+          completeCall(activeCall.id, lead.id)
+        },
+        Math.random() * 10000 + 5000
+      ) // 5-15 seconds
     }
   }
-  
+
   // Continue simulation
   setTimeout(() => {
     simulateDialing()
@@ -267,17 +293,19 @@ const simulateDialing = () => {
 
 const completeCall = (callId: string, leadId: string) => {
   // Remove from active calls
-  activeCalls.value = activeCalls.value.filter(call => call.id !== callId)
-  
+  activeCalls.value = activeCalls.value.filter((call) => call.id !== callId)
+
   // Update lead status
-  const lead = leads.value.find(l => l.id === leadId)
+  const lead = leads.value.find((l) => l.id === leadId)
   if (lead) {
     const isSuccess = Math.random() > 0.7 // 30% success rate
     lead.status = isSuccess ? 'completed' : 'failed'
     lead.disposition = isSuccess ? 'Connected' : 'No Answer'
-    
-    addActivityLog(isSuccess ? 'success' : 'failure', 
-      `Call to ${lead.phone} ${isSuccess ? 'completed successfully' : 'failed'}`)
+
+    addActivityLog(
+      isSuccess ? 'success' : 'failure',
+      `Call to ${lead.phone} ${isSuccess ? 'completed successfully' : 'failed'}`
+    )
   }
 }
 
@@ -295,7 +323,7 @@ onMounted(() => {
         <h1 class="dialer-title">Outbound AI Dialer Console</h1>
         <p class="dialer-subtitle">Manage AI-powered cold calling campaigns and lead generation</p>
       </div>
-      
+
       <!-- Header Progress -->
       <div class="header-progress">
         <div class="progress-info">
@@ -342,19 +370,13 @@ onMounted(() => {
           <v-card-text class="tab-content">
             <v-window v-model="activeTab">
               <v-window-item value="leads">
-                <DialerLeadsTable
-                  :leads="leads"
-                  @bulk-action="handleBulkAction"
-                />
+                <DialerLeadsTable :leads="leads" @bulk-action="handleBulkAction" />
               </v-window-item>
-              
+
               <v-window-item value="agents">
-                <DialerAgentsTab
-                  :agents="agents"
-                  @update-agent="updateAgent"
-                />
+                <DialerAgentsTab :agents="agents" @update-agent="updateAgent" />
               </v-window-item>
-              
+
               <v-window-item value="activity">
                 <DialerActivityLogTab :activities="activityLog" />
               </v-window-item>
@@ -365,7 +387,7 @@ onMounted(() => {
 
       <!-- Right Panel -->
       <div class="right-panel">
-        <DialerDialerControls
+        <DialerControls
           :stats="stats"
           :active-calls="activeCalls"
           :is-running="isRunning"

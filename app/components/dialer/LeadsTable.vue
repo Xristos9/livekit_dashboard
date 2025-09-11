@@ -18,18 +18,21 @@ const selectAll = ref(false)
 const filteredLeads = computed(() => {
   if (!search.value) return props.leads
   const query = search.value.toLowerCase()
-  return props.leads.filter(lead => 
-    lead.phone.includes(query) ||
-    `${lead.firstName} ${lead.lastName}`.toLowerCase().includes(query) ||
-    lead.company?.toLowerCase().includes(query)
+  return props.leads.filter(
+    (lead) =>
+      lead.phone.includes(query) ||
+      `${lead.firstName} ${lead.lastName}`.toLowerCase().includes(query)
   )
 })
 
 const statusCounts = computed(() => {
-  return props.leads.reduce((acc, lead) => {
-    acc[lead.status] = (acc[lead.status] || 0) + 1
-    return acc
-  }, {} as Record<string, number>)
+  return props.leads.reduce(
+    (acc, lead) => {
+      acc[lead.status] = (acc[lead.status] || 0) + 1
+      return acc
+    },
+    {} as Record<string, number>
+  )
 })
 
 const bulkActions = [
@@ -49,7 +52,7 @@ const handleBulkAction = (action: string) => {
 
 const toggleSelectAll = () => {
   if (selectAll.value) {
-    selectedLeads.value = filteredLeads.value.map(lead => lead.id)
+    selectedLeads.value = filteredLeads.value.map((lead) => lead.id)
   } else {
     selectedLeads.value = []
   }
@@ -62,7 +65,7 @@ const getStatusColor = (status: string) => {
     'in-call': 'blue',
     completed: 'success',
     failed: 'error',
-    skipped: 'purple'
+    skipped: 'purple',
   }
   return colors[status as keyof typeof colors] || 'grey'
 }
@@ -74,15 +77,18 @@ const getStatusText = (status: string) => {
     'in-call': 'In Call',
     completed: 'Completed',
     failed: 'Failed',
-    skipped: 'Skipped'
+    skipped: 'Skipped',
   }
   return texts[status as keyof typeof texts] || status
 }
 
-watch(() => props.leads, () => {
-  selectedLeads.value = []
-  selectAll.value = false
-})
+watch(
+  () => props.leads,
+  () => {
+    selectedLeads.value = []
+    selectAll.value = false
+  }
+)
 </script>
 
 <template>
@@ -100,7 +106,7 @@ watch(() => props.leads, () => {
           clearable
           class="search-field"
         />
-        
+
         <v-menu>
           <template #activator="{ props: menuProps }">
             <v-btn
@@ -146,7 +152,6 @@ watch(() => props.leads, () => {
           { title: '', key: 'select', sortable: false, width: '50px' },
           { title: 'Phone', key: 'phone', width: '150px' },
           { title: 'Name', key: 'name', width: '200px' },
-          { title: 'Company', key: 'company', width: '150px' },
           { title: 'Status', key: 'status', width: '120px' },
           { title: 'Disposition', key: 'disposition', width: '150px' },
         ]"
@@ -156,15 +161,6 @@ watch(() => props.leads, () => {
         show-select
         class="leads-table"
       >
-        <template #item.select="{ item, isSelected, toggleSelect }">
-          <v-checkbox
-            :model-value="isSelected"
-            @update:model-value="toggleSelect"
-            hide-details
-            density="compact"
-          />
-        </template>
-
         <template #item.phone="{ item }">
           <span class="phone-number">{{ item.phone }}</span>
         </template>
@@ -173,16 +169,8 @@ watch(() => props.leads, () => {
           <span>{{ `${item.firstName || ''} ${item.lastName || ''}`.trim() || '—' }}</span>
         </template>
 
-        <template #item.company="{ item }">
-          <span>{{ item.company || '—' }}</span>
-        </template>
-
         <template #item.status="{ item }">
-          <v-chip
-            :color="getStatusColor(item.status)"
-            variant="tonal"
-            size="small"
-          >
+          <v-chip :color="getStatusColor(item.status)" variant="tonal" size="small">
             {{ getStatusText(item.status) }}
           </v-chip>
         </template>
@@ -196,9 +184,7 @@ watch(() => props.leads, () => {
             <span class="selection-count">
               {{ selectedLeads.length }} of {{ filteredLeads.length }} selected
             </span>
-            <span class="total-count">
-              Total: {{ props.leads.length }} leads
-            </span>
+            <span class="total-count"> Total: {{ props.leads.length }} leads </span>
           </div>
         </template>
       </v-data-table>

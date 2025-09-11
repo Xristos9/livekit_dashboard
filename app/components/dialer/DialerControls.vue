@@ -40,9 +40,12 @@ const updateConcurrency = () => {
   emit('updateConcurrency', localConcurrency.value)
 }
 
-watch(() => props.globalConcurrency, (newValue) => {
-  localConcurrency.value = newValue
-})
+watch(
+  () => props.globalConcurrency,
+  (newValue) => {
+    localConcurrency.value = newValue
+  }
+)
 </script>
 
 <template>
@@ -51,7 +54,7 @@ watch(() => props.globalConcurrency, (newValue) => {
     <v-card elevation="10" class="config-card">
       <v-card-item>
         <v-card-title class="text-h6 mb-4">Configuration</v-card-title>
-        
+
         <div class="config-section">
           <v-text-field
             v-model.number="localConcurrency"
@@ -89,7 +92,7 @@ watch(() => props.globalConcurrency, (newValue) => {
     <v-card elevation="10" class="kpi-card">
       <v-card-item>
         <v-card-title class="text-h6 mb-4">Live Stats</v-card-title>
-        
+
         <div class="kpi-grid">
           <div class="kpi-item">
             <div class="kpi-value">{{ stats.queued }}</div>
@@ -111,7 +114,7 @@ watch(() => props.globalConcurrency, (newValue) => {
     <v-card elevation="10" class="controls-card">
       <v-card-item>
         <v-card-title class="text-h6 mb-4">Run Controls</v-card-title>
-        
+
         <div class="control-buttons">
           <v-btn
             @click="handleStart"
@@ -125,20 +128,20 @@ watch(() => props.globalConcurrency, (newValue) => {
           >
             Start
           </v-btn>
-          
+
           <v-btn
             @click="handlePauseResume"
             :disabled="!isRunning"
-            :color="isPaused ? 'info' : 'warning'"
+            :color="isPaused ? 'info' : isRunning ? 'warning' : 'grey100'"
             variant="flat"
             size="large"
             :prepend-icon="isPaused ? 'mdi-play' : 'mdi-pause'"
             block
             class="control-btn"
           >
-            {{ isPaused ? 'Resume' : 'Pause' }}
+            {{ !!isPaused ? 'Resume' : 'Pause' }}
           </v-btn>
-          
+
           <v-btn
             @click="handleStop"
             :disabled="!isRunning"
@@ -159,13 +162,9 @@ watch(() => props.globalConcurrency, (newValue) => {
     <v-card elevation="10" class="active-calls-card">
       <v-card-item>
         <v-card-title class="text-h6 mb-4">Active Calls</v-card-title>
-        
+
         <div class="active-calls-list">
-          <div
-            v-for="call in activeCalls"
-            :key="call.id"
-            class="active-call-item"
-          >
+          <div v-for="call in activeCalls" :key="call.id" class="active-call-item">
             <div class="call-info">
               <div class="call-phone">{{ call.phone }}</div>
               <div class="call-lead">{{ call.leadName }}</div>

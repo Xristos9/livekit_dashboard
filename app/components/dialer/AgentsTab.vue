@@ -17,7 +17,7 @@ const timezones = [
   'America/Denver',
   'America/Los_Angeles',
   'Asia/Tokyo',
-  'Australia/Sydney'
+  'Australia/Sydney',
 ]
 
 const getStatusColor = (status: string) => {
@@ -25,7 +25,7 @@ const getStatusColor = (status: string) => {
     idle: 'success',
     calling: 'primary',
     paused: 'warning',
-    error: 'error'
+    error: 'error',
   }
   return colors[status as keyof typeof colors] || 'grey'
 }
@@ -35,7 +35,7 @@ const getStatusText = (status: string) => {
     idle: 'Idle',
     calling: 'Calling',
     paused: 'Paused',
-    error: 'Error'
+    error: 'Error',
   }
   return texts[status as keyof typeof texts] || status
 }
@@ -48,12 +48,7 @@ const updateAgent = (agent: Agent) => {
 <template>
   <div class="agents-tab">
     <div class="agents-grid">
-      <v-card
-        v-for="agent in agents"
-        :key="agent.id"
-        elevation="10"
-        class="agent-card"
-      >
+      <v-card v-for="agent in agents" :key="agent.id" elevation="10" class="agent-card">
         <v-card-item>
           <div class="agent-header">
             <div class="agent-info">
@@ -67,12 +62,7 @@ const updateAgent = (agent: Agent) => {
                 {{ getStatusText(agent.status) }}
               </v-chip>
             </div>
-            <v-chip
-              color="info"
-              variant="outlined"
-              size="small"
-              class="capacity-chip"
-            >
+            <v-chip color="info" variant="outlined" size="small" class="capacity-chip">
               {{ agent.capacity }}x capacity
             </v-chip>
           </div>
@@ -107,7 +97,9 @@ const updateAgent = (agent: Agent) => {
             <div class="toggle-setting">
               <v-switch
                 :model-value="agent.voicemailDrop"
-                @update:model-value="(value) => updateAgent({ ...agent, voicemailDrop: value })"
+                @update:model-value="
+                  (value: boolean | null) => updateAgent({ ...agent, voicemailDrop: !!value })
+                "
                 color="primary"
                 hide-details
                 density="compact"

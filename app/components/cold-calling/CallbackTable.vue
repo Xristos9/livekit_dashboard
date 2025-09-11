@@ -11,9 +11,10 @@ const search = ref('')
 
 const filteredCallbacks = computed(() => {
   if (!search.value) return props.callbacks
-  return props.callbacks.filter(call => 
-    call.phone.includes(search.value) || 
-    call.sessionId.toLowerCase().includes(search.value.toLowerCase())
+  return props.callbacks.filter(
+    (call) =>
+      call.phone.includes(search.value) ||
+      call.sessionId.toLowerCase().includes(search.value.toLowerCase())
   )
 })
 
@@ -31,7 +32,7 @@ const formatDateTime = (dateString: string) => {
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'Europe/Athens'
+    timeZone: 'Europe/Athens',
   })
 }
 
@@ -66,13 +67,14 @@ const copyPhone = async (phone: string) => {
           density="compact"
           hide-details
           clearable
-          style="max-width: 300px;"
+          style="max-width: 300px"
         />
       </div>
 
       <div class="mb-3">
         <v-chip color="success" variant="tonal" size="small">
-          {{ filteredCallbacks.length }} callback{{ filteredCallbacks.length !== 1 ? 's' : '' }} pending
+          {{ filteredCallbacks.length }} callback{{ filteredCallbacks.length !== 1 ? 's' : '' }}
+          pending
         </v-chip>
       </div>
 
@@ -135,15 +137,11 @@ const copyPhone = async (phone: string) => {
         </tbody>
       </v-table>
 
-      <div v-if="pageCount > 1" class="d-flex justify-center mt-4">
-        <v-pagination
-          v-model="page"
-          :length="pageCount"
-          density="comfortable"
-        />
+      <div v-if="pageCount > 1" class="d-flex mt-4 justify-center">
+        <v-pagination v-model="page" :length="pageCount" density="comfortable" />
       </div>
 
-      <div v-if="filteredCallbacks.length === 0" class="text-center py-8">
+      <div v-if="filteredCallbacks.length === 0" class="py-8 text-center">
         <v-icon size="48" color="muted" class="mb-2">mdi-phone-off</v-icon>
         <p class="text-muted">
           {{ search ? 'No callbacks match your search.' : 'No callbacks available.' }}

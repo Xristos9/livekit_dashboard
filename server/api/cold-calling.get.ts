@@ -19,27 +19,27 @@ export default defineEventHandler(async (event) => {
   async function fetchAllRecords(table: string, filter?: string) {
     const records: any[] = []
     let offset: string | undefined
-    
+
     do {
       const url = new URL(`https://api.airtable.com/v0/${baseId}/${encodeURIComponent(table)}`)
       if (offset) url.searchParams.set('offset', offset)
       if (filter) url.searchParams.set('filterByFormula', filter)
       url.searchParams.set('sort[0][field]', 'CreatedAt')
       url.searchParams.set('sort[0][direction]', 'desc')
-      
+
       const resp = await fetch(url.toString(), {
         headers: { Authorization: `Bearer ${apiKey}` },
       })
-      
+
       if (!resp.ok) {
         throw createError({ statusCode: resp.status, statusMessage: 'Airtable request failed' })
       }
-      
+
       const data = await resp.json()
       records.push(...(data.records || []))
       offset = data.offset
     } while (offset)
-    
+
     return records
   }
 
@@ -62,9 +62,9 @@ export default defineEventHandler(async (event) => {
 
     // Calculate statistics
     const totalCalls = calls.length
-    const callbacks = calls.filter(call => call.status === 'callback')
-    const negative = calls.filter(call => call.status === 'negative')
-    
+    const callbacks = calls.filter((call) => call.status === 'callback')
+    const negative = calls.filter((call) => call.status === 'negative')
+
     const stats: CallStats = {
       totalCalls,
       callbacks: callbacks.length,

@@ -29,7 +29,7 @@ const sidebarItem: menu[] = [
   },
   {
     title: 'Outbound Dialer',
-    icon: 'phone-outgoing-line-duotone',
+    icon: 'phone-calling-rounded-line-duotone',
     to: '/outbound-dialer',
   },
   {

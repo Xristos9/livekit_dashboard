@@ -13,19 +13,20 @@ const emit = defineEmits<{
   cancel: []
 }>()
 
-const mapping = ref<CSVMapping>({
+// Local mapping uses only strings for clean v-model typing
+const mapping = ref({
   phone: '',
   firstName: '',
   lastName: '',
-  company: ''
+  company: '',
 })
 
 const previewData = computed(() => {
-  return props.csvData.slice(0, 3).map(row => ({
+  return props.csvData.slice(0, 3).map((row) => ({
     phone: mapping.value.phone ? row[mapping.value.phone] : '',
     firstName: mapping.value.firstName ? row[mapping.value.firstName] : '',
     lastName: mapping.value.lastName ? row[mapping.value.lastName] : '',
-    company: mapping.value.company ? row[mapping.value.company] : ''
+    company: mapping.value.company ? row[mapping.value.company] : '',
   }))
 })
 
@@ -35,7 +36,13 @@ const isValid = computed(() => {
 
 const handleConfirm = () => {
   if (isValid.value) {
-    emit('confirm', mapping.value)
+    const result: CSVMapping = {
+      phone: mapping.value.phone,
+      ...(mapping.value.firstName ? { firstName: mapping.value.firstName } : {}),
+      ...(mapping.value.lastName ? { lastName: mapping.value.lastName } : {}),
+      ...(mapping.value.company ? { company: mapping.value.company } : {}),
+    }
+    emit('confirm', result)
     emit('update:modelValue', false)
   }
 }
@@ -46,43 +53,47 @@ const handleCancel = () => {
 }
 
 // Auto-detect common field mappings
-watch(() => props.csvHeaders, (headers) => {
-  if (headers.length > 0) {
-    const lowerHeaders = headers.map(h => h.toLowerCase())
-    
-    // Auto-detect phone
-    const phoneIndex = lowerHeaders.findIndex(h => 
-      h.includes('phone') || h.includes('mobile') || h.includes('tel')
-    )
-    if (phoneIndex >= 0) {
-      mapping.value.phone = headers[phoneIndex]
-    }
+watch(
+  () => props.csvHeaders,
+  (headers) => {
+    if (headers.length > 0) {
+      const lowerHeaders = headers.map((h) => h.toLowerCase())
 
-    // Auto-detect first name
-    const firstNameIndex = lowerHeaders.findIndex(h => 
-      h.includes('first') || h.includes('fname') || h === 'name'
-    )
-    if (firstNameIndex >= 0) {
-      mapping.value.firstName = headers[firstNameIndex]
-    }
+      // Auto-detect phone
+      const phoneIndex = lowerHeaders.findIndex(
+        (h) => h.includes('phone') || h.includes('mobile') || h.includes('tel')
+      )
+      if (phoneIndex >= 0) {
+        mapping.value.phone = headers[phoneIndex] ?? ''
+      }
 
-    // Auto-detect last name
-    const lastNameIndex = lowerHeaders.findIndex(h => 
-      h.includes('last') || h.includes('lname') || h.includes('surname')
-    )
-    if (lastNameIndex >= 0) {
-      mapping.value.lastName = headers[lastNameIndex]
-    }
+      // Auto-detect first name
+      const firstNameIndex = lowerHeaders.findIndex(
+        (h) => h.includes('first') || h.includes('fname') || h === 'name'
+      )
+      if (firstNameIndex >= 0) {
+        mapping.value.firstName = headers[firstNameIndex] ?? ''
+      }
 
-    // Auto-detect company
-    const companyIndex = lowerHeaders.findIndex(h => 
-      h.includes('company') || h.includes('organization') || h.includes('business')
-    )
-    if (companyIndex >= 0) {
-      mapping.value.company = headers[companyIndex]
+      // Auto-detect last name
+      const lastNameIndex = lowerHeaders.findIndex(
+        (h) => h.includes('last') || h.includes('lname') || h.includes('surname')
+      )
+      if (lastNameIndex >= 0) {
+        mapping.value.lastName = headers[lastNameIndex] ?? ''
+      }
+
+      // Auto-detect company
+      const companyIndex = lowerHeaders.findIndex(
+        (h) => h.includes('company') || h.includes('organization') || h.includes('business')
+      )
+      if (companyIndex >= 0) {
+        mapping.value.company = headers[companyIndex] ?? ''
+      }
     }
-  }
-}, { immediate: true })
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -93,9 +104,7 @@ watch(() => props.csvHeaders, (headers) => {
     persistent
   >
     <v-card>
-      <v-card-title class="text-h5 pa-6 pb-4">
-        Map CSV Columns
-      </v-card-title>
+      <v-card-title class="text-h5 pa-6 pb-4"> Map CSV Columns </v-card-title>
 
       <v-card-text class="pa-6 pt-0">
         <p class="text-body-2 text-muted mb-6">
@@ -110,7 +119,7 @@ watch(() => props.csvHeaders, (headers) => {
             variant="outlined"
             density="compact"
             prepend-inner-icon="mdi-phone"
-            :rules="[v => !!v || 'Phone number is required']"
+            :rules="[(v) => !!v || 'Phone number is required']"
             class="mapping-field"
           />
 
@@ -159,11 +168,7 @@ watch(() => props.csvHeaders, (headers) => {
               <div class="preview-cell">Last Name</div>
               <div class="preview-cell">Company</div>
             </div>
-            <div
-              v-for="(row, index) in previewData"
-              :key="index"
-              class="preview-row"
-            >
+            <div v-for="(row, index) in previewData" :key="index" class="preview-row">
               <div class="preview-cell">{{ row.phone || '—' }}</div>
               <div class="preview-cell">{{ row.firstName || '—' }}</div>
               <div class="preview-cell">{{ row.lastName || '—' }}</div>
@@ -175,19 +180,8 @@ watch(() => props.csvHeaders, (headers) => {
 
       <v-card-actions class="pa-6 pt-0">
         <v-spacer />
-        <v-btn
-          @click="handleCancel"
-          variant="text"
-          color="grey"
-        >
-          Cancel
-        </v-btn>
-        <v-btn
-          @click="handleConfirm"
-          :disabled="!isValid"
-          color="primary"
-          variant="flat"
-        >
+        <v-btn @click="handleCancel" variant="text" color="grey"> Cancel </v-btn>
+        <v-btn @click="handleConfirm" :disabled="!isValid" color="primary" variant="flat">
           Import Leads
         </v-btn>
       </v-card-actions>

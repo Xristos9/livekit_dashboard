@@ -19,13 +19,16 @@ const { data, pending, error, refresh } = await useFetch<{
 
 const calls = computed(() => data.value?.calls ?? [])
 const callbacks = computed(() => data.value?.callbacks ?? [])
-const stats = computed(() => data.value?.stats ?? {
-  totalCalls: 0,
-  callbacks: 0,
-  negative: 0,
-  callbackPercentage: 0,
-  negativePercentage: 0,
-})
+const stats = computed(
+  () =>
+    data.value?.stats ?? {
+      totalCalls: 0,
+      callbacks: 0,
+      negative: 0,
+      callbackPercentage: 0,
+      negativePercentage: 0,
+    }
+)
 
 const selectedRange = ref('This Month')
 const rangeOptions = ['This Month', 'Last 30 Days', 'Custom']
@@ -37,7 +40,9 @@ const rangeOptions = ['This Month', 'Last 30 Days', 'Custom']
     <div class="dashboard-header mb-6">
       <div>
         <h1 class="dashboard-title">Cold Calling Dashboard</h1>
-        <p class="dashboard-subtitle">Monitor outbound calling performance and manage callback leads</p>
+        <p class="dashboard-subtitle">
+          Monitor outbound calling performance and manage callback leads
+        </p>
       </div>
       <div class="range-selector">
         <v-btn-toggle v-model="selectedRange" variant="outlined" color="primary" mandatory>
@@ -49,18 +54,16 @@ const rangeOptions = ['This Month', 'Last 30 Days', 'Custom']
     </div>
 
     <!-- Loading State -->
-    <div v-if="pending" class="text-center py-8">
+    <div v-if="pending" class="py-8 text-center">
       <v-progress-circular indeterminate color="primary" size="64" />
-      <p class="mt-4 text-muted">Loading call data...</p>
+      <p class="text-muted mt-4">Loading call data...</p>
     </div>
 
     <!-- Error State -->
     <v-alert v-else-if="error" type="error" class="mb-6">
       Failed to load call data: {{ error.statusMessage || error.message }}
       <template #append>
-        <v-btn @click="refresh()" variant="text" size="small">
-          Retry
-        </v-btn>
+        <v-btn @click="refresh()" variant="text" size="small"> Retry </v-btn>
       </template>
     </v-alert>
 
@@ -81,7 +84,7 @@ const rangeOptions = ['This Month', 'Last 30 Days', 'Custom']
       </v-row>
 
       <!-- Refresh Button -->
-      <div class="text-center mt-6">
+      <div class="mt-6 text-center">
         <v-btn @click="refresh()" variant="outlined" prepend-icon="mdi-refresh">
           Refresh Data
         </v-btn>
