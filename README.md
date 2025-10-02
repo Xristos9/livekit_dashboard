@@ -74,6 +74,18 @@ bun run preview
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
+## Project structure
+
+Key folders to explore when working on the dashboard experience:
+
+- `app/pages/dashboard/` – page entry point that assembles the analytics view from feature-specific components.
+- `app/pages/recordings/` – recordings browser that lists, filters, and plays captured calls.
+- `app/components/dashboard/` – presentation components organised into `cards`, `charts`, and `tables` for easier discovery.
+- `app/data/dashboard/` – dashboard mock data used during local development and testing.
+- `app/types/dashboard.ts` – shared TypeScript interfaces for dashboard data contracts.
+- `app/types/recordings.ts` – type definitions shared by the recordings UI and API routes.
+- `server/api/dashboard.get.ts` – server endpoint that powers the dashboard page with Airtable data.
+
 ## DigitalOcean App Platform
 
 To deploy on [DigitalOcean App Platform](https://www.digitalocean.com/products/app-platform):

@@ -43,17 +43,21 @@ export default defineEventHandler(async (event) => {
 
   if (record && record.fields?.Password === password) {
     const userData = {
-      id: record.id,
-      recID: record.fields?.ID,
+      recID: record.id,
+      id: record.fields?.ID,
       name: record.fields?.Name,
       email: record.fields?.Email,
       trunkId: record.fields?.['Trunk ID'],
-      sessions: record.fields?.Sessions,
       totalSessions: record.fields?.['Total Sessions'],
-      totalCostUSD: record.fields?.['Total Cost (USD)'],
       averageSessionDuration: record.fields?.['Average Session Duration (s)'],
+      costPerMinute: record.fields?.['Cost per Minute'],
+      totalSessionDuration: record.fields?.['Total Session Duration (min)'],
+      totalCost: record.fields?.['Total Cost'],
       username: record.fields?.Username,
     }
+
+    console.log(`User ${username} logged in successfully`)
+    console.log(userData)
 
     // store user information in a cookie accessible on client
     setCookie(event, 'user', JSON.stringify(userData), {

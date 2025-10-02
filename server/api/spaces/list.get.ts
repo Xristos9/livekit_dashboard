@@ -44,7 +44,7 @@ import {
   HeadObjectCommand,
 } from '@aws-sdk/client-s3'
 import { getS3Client } from '~/server/utils/s3'
-import type { RecordPair } from '@/types/livekit'
+import type { RecordPair } from '@/types/recordings'
 
 // Minimal shape we use for S3 objects in this handler
 type Obj = { Key: string; LastModified?: string; Size?: number }

@@ -10,21 +10,21 @@ const loading = ref(false)
 const user = useUser()
 const router = useRouter()
 
-onMounted(() => {
-  const savedUsername = localStorage.getItem('rememberedUsername')
-  if (savedUsername) {
-    username.value = savedUsername
-    checkbox.value = true
-  }
-  if (!user.value) {
-    const savedUser = localStorage.getItem('userData')
-    if (savedUser) {
-      try {
-        user.value = JSON.parse(savedUser)
-      } catch {}
-    }
-  }
-})
+// onMounted(() => {
+//   const savedUsername = localStorage.getItem('rememberedUsername')
+//   if (savedUsername) {
+//     username.value = savedUsername
+//     checkbox.value = true
+//   }
+//   if (!user.value) {
+//     const savedUser = localStorage.getItem('userData')
+//     if (savedUser) {
+//       try {
+//         user.value = JSON.parse(savedUser)
+//       } catch {}
+//     }
+//   }
+// })
 
 const login = async () => {
   error.value = ''
@@ -36,14 +36,14 @@ const login = async () => {
     })
     if (res.success && res.user) {
       user.value = res.user
-      if (checkbox.value) {
-        localStorage.setItem('rememberedUsername', username.value)
-        localStorage.setItem('userData', JSON.stringify(res.user))
-      } else {
-        localStorage.removeItem('rememberedUsername')
-        localStorage.removeItem('userData')
-      }
-      router.push('/ai-dashboard')
+      // if (checkbox.value) {
+      //   localStorage.setItem('rememberedUsername', username.value)
+      //   localStorage.setItem('userData', JSON.stringify(res.user))
+      // } else {
+      //   localStorage.removeItem('rememberedUsername')
+      //   localStorage.removeItem('userData')
+      // }
+      router.push('/dashboard')
     } else {
       error.value = res.message || 'Invalid credentials'
     }
@@ -94,10 +94,9 @@ const login = async () => {
       <v-alert type="error" density="compact" variant="tonal">{{ error }}</v-alert>
     </v-col>
     <v-col cols="12" class="pt-0">
-      <!-- <v-btn color="primary" size="large" block flat @click="login" :loading="loading">
+      <v-btn color="primary" size="large" block flat @click="login" :loading="loading">
         Sign in
-      </v-btn> -->
-      <v-btn to="/ai-dashboard" color="primary" size="large" block flat>Sign in</v-btn>
+      </v-btn>
     </v-col>
   </v-row>
 </template>

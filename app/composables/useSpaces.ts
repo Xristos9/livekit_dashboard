@@ -1,4 +1,4 @@
-import type { RecordPair } from '@/types/livekit'
+import type { RecordPair } from '@/types/recordings'
 
 export function useSpaces() {
   const config = useRuntimeConfig()

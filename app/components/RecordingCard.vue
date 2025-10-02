@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { RecordPair } from '@/types/livekit'
+import type { RecordPair } from '@/types/recordings'
 
 const props = defineProps<{
   rec: RecordPair

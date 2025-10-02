@@ -20,22 +20,12 @@ const sidebarItem: menu[] = [
   {
     title: 'Dashboard',
     icon: 'cpu-line-duotone',
-    to: '/ai-dashboard',
-  },
-  {
-    title: 'Cold Calling',
-    icon: 'phone-calling-rounded-line-duotone',
-    to: '/cold-calling',
-  },
-  {
-    title: 'Outbound Dialer',
-    icon: 'phone-calling-rounded-line-duotone',
-    to: '/outbound-dialer',
+    to: '/dashboard',
   },
   {
     title: 'Recordings',
     icon: 'planet-3-line-duotone',
-    to: '/livekit-dashboard',
+    to: '/recordings',
   },
 ]
 
