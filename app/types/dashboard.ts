@@ -6,13 +6,13 @@ export interface Session {
   model: string
   cost: number
   callReason: string
+  roomName?: string | null
 }
 
-export interface AgentCost {
+export interface AgentUsage {
   agent: string
-  cost: number
+  usageCount: number
 }
-
 export interface CallReason {
   reason: string
   count: number
@@ -27,6 +27,6 @@ export interface KPIData {
 
 export interface DashboardApiPayload {
   sessions: Session[]
-  agentCosts: AgentCost[]
+  agentUsage: AgentUsage[]
   callReasons: CallReason[]
 }

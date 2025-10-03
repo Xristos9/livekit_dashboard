@@ -1,12 +1,25 @@
 <script setup lang="ts">
-import type { AgentCost } from '@/types/dashboard'
+import type { AgentUsage } from '@/types/dashboard'
 
 const props = defineProps<{
-  agentCosts: AgentCost[]
+  agentUsage: AgentUsage[]
 }>()
 
-const labels = computed(() => (props.agentCosts ?? []).map((a) => a.agent))
-const series = computed(() => (props.agentCosts ?? []).map((a) => a.cost))
+const labels = computed(() => (props.agentUsage ?? []).map((a) => a.agent))
+
+const series = computed(() => {
+  const usage = props.agentUsage ?? []
+  if (usage.length === 0) {
+    return []
+  }
+
+  const total = usage.reduce((sum, item) => sum + item.usageCount, 0)
+  if (!total) {
+    return usage.map(() => 0)
+  }
+
+  return usage.map((item) => Number(((item.usageCount / total) * 100).toFixed(2)))
+})
 
 const chartOptions = computed(() => ({
   chart: {

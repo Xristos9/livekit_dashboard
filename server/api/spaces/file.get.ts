@@ -1,4 +1,4 @@
-import type { H3Event } from 'h3'
+import { getCookie, getQuery, createError, setHeaders, type H3Event } from 'h3'
 import { GetObjectCommand } from '@aws-sdk/client-s3'
 import { getS3Client } from '~/server/utils/s3'
 
@@ -8,6 +8,21 @@ export default defineEventHandler(async (event: H3Event) => {
     const key = typeof q.key === 'string' ? q.key : null
     const download = q.download === '1' || q.download === 'true'
     if (!key) throw createError({ statusCode: 400, statusMessage: 'Missing key' })
+
+    const userCookie = getCookie(event, 'user')
+    let trunkId: string | null = null
+    if (userCookie) {
+      try {
+        trunkId = JSON.parse(userCookie).trunkId || null
+      } catch {}
+    }
+    if (!trunkId) {
+      throw createError({ statusCode: 401, statusMessage: 'Missing trunk ID' })
+    }
+
+    if (!key.startsWith(`${trunkId}/`)) {
+      throw createError({ statusCode: 403, statusMessage: 'Forbidden' })
+    }
 
     const rc = useRuntimeConfig()
     const bucket = rc.doSpaces.bucket

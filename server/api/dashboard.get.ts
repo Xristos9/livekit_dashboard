@@ -1,7 +1,7 @@
 import { defineEventHandler, createError, getCookie } from 'h3'
 import type {
   Session,
-  AgentCost,
+  AgentUsage,
   CallReason,
   DashboardApiPayload,
   KPIData,
@@ -72,7 +72,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: 'Invalid user cookie' })
   }
 
-  const sessionFilter = `FIND('${recordId}', {Customer})`
+  const sessionFilter = `FIND('${customerId}', {Customer})`
   const sessionRecords = await fetchAll(sessionsTable, sessionFilter)
   // console.log(`Fetched ${sessionRecords.length} sessions for user ${username || customerId}`)
   // console.log(sessionRecords)
@@ -111,7 +111,8 @@ export default defineEventHandler(async (event) => {
       )
     )
 
-    const durationSeconds = Number(f['Duration (s)'] ?? f['Calculated Duration (s)'] ?? 0)
+    const rawDurationSeconds = Number(f['Duration (s)'] ?? 0)
+    const durationSeconds = Math.round(rawDurationSeconds * 100) / 100
     const durationMinutes = durationSeconds / 60
     const perMinuteRate =
       typeof costPerMinute === 'number' && Number.isFinite(costPerMinute) ? costPerMinute : 0
@@ -127,30 +128,27 @@ export default defineEventHandler(async (event) => {
       callReason: reason,
     }
   })
-  console.log(sessions)
+  const agentUsageMap: Record<string, number> = {}
 
-  const agentCostMap: Record<string, number> = {}
-
-  for (const rec of logRecords) {
-    const f = rec.fields || {}
-    const agent = f['Agent Name']
-    const cost = Number(f['Cost (USD)'] ?? 0)
-    if (typeof agent === 'string') {
-      agentCostMap[agent] = (agentCostMap[agent] || 0) + cost
+  for (const session of sessions) {
+    for (const agent of session.agents) {
+      agentUsageMap[agent] = (agentUsageMap[agent] || 0) + 1
     }
   }
 
-  const agentCosts: AgentCost[] = Object.entries(agentCostMap).map(([agent, cost]) => ({
-    agent,
-    cost,
-  }))
+  const agentUsage: AgentUsage[] = Object.entries(agentUsageMap)
+    .map(([agent, usageCount]) => ({
+      agent,
+      usageCount,
+    }))
+    .sort((a, b) => b.usageCount - a.usageCount)
 
   const callReasons: CallReason[] = Object.entries(callReasonMap).map(([reason, count]) => ({
     reason,
     count,
   }))
 
-  const payload: DashboardApiPayload = { sessions, agentCosts, callReasons }
+  const payload: DashboardApiPayload = { sessions, agentUsage, callReasons }
 
   return payload
 })

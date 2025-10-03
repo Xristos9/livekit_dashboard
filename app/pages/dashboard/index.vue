@@ -7,7 +7,7 @@ import type {
 const { data } = await useFetch<DashboardApiPayload>('/api/dashboard')
 
 const sessions = computed(() => data.value?.sessions ?? [])
-const agentCosts = computed(() => data.value?.agentCosts ?? [])
+const agentUsage = computed(() => data.value?.agentUsage ?? [])
 const callReasons = computed(() => data.value?.callReasons ?? [])
 
 const kpiData = computed<KPIData>(() => {
@@ -53,7 +53,7 @@ const rangeOptions = ['This Month', 'Last 30 Days', 'Custom']
         <DashboardChartsCostOverTimeChart :sessions="sessions" />
       </v-col>
       <v-col cols="12" lg="6">
-        <DashboardChartsAgentContributionChart :agent-costs="agentCosts" />
+        <DashboardChartsAgentContributionChart :agent-usage="agentUsage" />
       </v-col>
       <v-col cols="12">
         <DashboardChartsCallReasonChart :reasons="callReasons" />

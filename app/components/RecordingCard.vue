@@ -92,29 +92,21 @@ function fmtDuration(s?: number | null) {
       <div class="info-grid-3 mb-4">
         <div class="info-item">
           <span class="info-label">JSON:</span>
-          <v-chip 
-            :color="rec.json ? 'success' : 'error'" 
-            size="small" 
-            variant="tonal"
-            class="ml-2"
-          >
+          <v-chip :color="rec.json ? 'success' : 'error'" size="small" variant="tonal" class="ml-2">
             {{ rec.json ? 'available' : 'missing' }}
           </v-chip>
         </div>
         <div class="info-item">
           <span class="info-label">MP4:</span>
-          <v-chip 
-            :color="rec.mp4 ? 'success' : 'error'" 
-            size="small" 
-            variant="tonal"
-            class="ml-2"
-          >
+          <v-chip :color="rec.mp4 ? 'success' : 'error'" size="small" variant="tonal" class="ml-2">
             {{ rec.mp4 ? 'available' : 'missing' }}
           </v-chip>
         </div>
         <div class="info-item">
           <span class="info-label">Total Size:</span>
-          <span class="info-value">{{ humanSize((rec.json?.size || 0) + (rec.mp4?.size || 0)) }}</span>
+          <span class="info-value">{{
+            humanSize((rec.json?.size || 0) + (rec.mp4?.size || 0))
+          }}</span>
         </div>
       </div>
 
@@ -146,12 +138,7 @@ function fmtDuration(s?: number | null) {
 
       <!-- Audio player for mp4 (audio-only) -->
       <div v-if="rec.mp4" class="audio-player">
-        <audio
-          :src="fileUrl(rec.mp4.key)"
-          controls
-          preload="metadata"
-          class="audio-controls"
-        />
+        <audio :src="fileUrl(rec.mp4.key)" controls preload="metadata" class="audio-controls" />
       </div>
     </v-card-item>
   </v-card>

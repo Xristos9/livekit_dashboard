@@ -56,9 +56,6 @@ export default defineEventHandler(async (event) => {
       username: record.fields?.Username,
     }
 
-    console.log(`User ${username} logged in successfully`)
-    console.log(userData)
-
     // store user information in a cookie accessible on client
     setCookie(event, 'user', JSON.stringify(userData), {
       sameSite: 'lax',

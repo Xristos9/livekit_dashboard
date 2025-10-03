@@ -6,36 +6,58 @@ const props = defineProps<{
 }>()
 
 const labels = computed(() => (props.reasons ?? []).map((r) => r.reason))
-const series = computed(() => (props.reasons ?? []).map((r) => r.count))
+const series = computed(() => [
+  {
+    name: 'Calls',
+    data: (props.reasons ?? []).map((r) => r.count),
+  },
+])
 
 const chartOptions = computed(() => ({
   chart: {
-    type: 'donut',
+    type: 'bar',
     toolbar: { show: false },
     fontFamily: 'inherit',
   },
-  labels: labels.value,
-  legend: {
-    position: 'right',
-    markers: { width: 12, height: 12 },
-    formatter: (seriesName: string, opts: any) => {
-      const percent = opts.w.globals.seriesPercent[opts.seriesIndex][0]
-      return `${seriesName} - ${percent.toFixed(1)}%`
+  xaxis: {
+    categories: labels.value,
+    labels: {
+      style: {
+        colors: 'rgba(var(--v-theme-on-surface))',
+      },
     },
   },
-  colors: [
-    'rgba(var(--v-theme-primary))',
-    'rgba(var(--v-theme-secondary))',
-    'rgba(var(--v-theme-success))',
-    'rgba(var(--v-theme-warning))',
-    'rgba(var(--v-theme-error))',
-    'rgba(var(--v-theme-info))',
-  ],
-  dataLabels: {
-    formatter: (_: any, opts: any) =>
-      `${opts.w.globals.seriesPercent[opts.seriesIndex][0].toFixed(1)}%`,
+  yaxis: {
+    labels: {
+      style: {
+        colors: 'rgba(var(--v-theme-on-surface))',
+      },
+    },
+    title: { text: 'Calls' },
   },
-  stroke: { colors: ['rgba(var(--v-theme-surface))'], width: 2 },
+  plotOptions: {
+    bar: {
+      horizontal: true,
+      borderRadius: 6,
+      barHeight: '70%',
+      dataLabels: {
+        position: 'right',
+      },
+    },
+  },
+  colors: ['rgba(var(--v-theme-primary))'],
+  dataLabels: {
+    enabled: true,
+    formatter: (val: number) => Math.round(val).toString(),
+    style: {
+      colors: ['rgba(var(--v-theme-on-surface))'],
+    },
+  },
+  tooltip: {
+    y: {
+      formatter: (val: number) => `${val} calls`,
+    },
+  },
   noData: { text: 'No data' },
 }))
 </script>
@@ -45,7 +67,7 @@ const chartOptions = computed(() => ({
     <v-card-item>
       <v-card-title class="text-h6 mb-3">Call Reasons</v-card-title>
       <div class="mx-3 mt-4 pt-2 pb-3">
-        <apexchart type="donut" height="320" :options="chartOptions" :series="series" />
+        <apexchart type="bar" height="360" :options="chartOptions" :series="series" />
       </div>
     </v-card-item>
   </v-card>
