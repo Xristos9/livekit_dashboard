@@ -1,0 +1,62 @@
+projectName: voiceai-dashboard
+image:
+  repository: ghcr.io
+  pullPolicy: IfNotPresent
+  tag: ""
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+service:
+  type: ClusterIP
+  port: 3000
+containers:
+  ports:
+    name: app
+    containerPort: 3000
+    protocol: TCP
+resources:
+  limits:
+    cpu: "200m"
+    memory: "512Mi"
+  requests:
+    cpu: "5m"
+    memory: "5Mi"
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+nodeSelector: {}
+tolerations: []
+affinity: {}
+replicaCount: 1
+probe:
+  livenessPath: "/"
+  readinessPath: "/"
+ingress:
+  className: kong
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: kong
+    konghq.com/plugins: rankflo-default-kong
+    konghq.com/strip-path: "true"
+    konghq.com/protocols: "http"
+    konghq.com/https-redirect-status-code: "301"
+  hosts:
+    - host: evichon.com
+      paths:
+        - path: "/"
+          pathType: Prefix
+  tls:
+    - secretName: cloudflare-cert-new
+      hosts:
+        - evichon.com
+

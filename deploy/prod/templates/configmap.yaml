@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.projectName }}
+data:
+  config.conf: |-
+    include "{{ .Values.baseConfig }}.yaml"
