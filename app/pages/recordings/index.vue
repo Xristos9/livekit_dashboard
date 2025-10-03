@@ -55,7 +55,15 @@
     </div>
 
     <div v-if="totalPages > 1" class="pagination">
-      <v-pagination v-model="page" :length="totalPages" rounded density="comfortable" />
+      <v-pagination
+        v-model="page"
+        :length="totalPages"
+        rounded="circle"
+        density="comfortable"
+        :total-visible="7"
+        active-color="primary"
+        class="custom-pagination"
+      />
     </div>
 
     <p v-else-if="!loading" class="no-records">No records.</p>

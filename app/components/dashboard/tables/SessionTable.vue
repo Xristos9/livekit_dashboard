@@ -156,23 +156,25 @@ function formatEUR(n: number) {
               class="sortable"
               @click="toggleSort(column.key)"
             >
-              <span>{{ column.label }}</span>
-              <v-icon
-                size="16"
-                class="ml-1"
-                :icon="
-                  sortKey === column.key
-                    ? sortDesc
-                      ? 'mdi-arrow-down'
-                      : 'mdi-arrow-up'
-                    : 'mdi-swap-vertical'
-                "
-              />
+              <div class="th-content">
+                <span>{{ column.label }}</span>
+                <v-icon
+                  size="16"
+                  class="sort-icon"
+                  :icon="
+                    sortKey === column.key
+                      ? sortDesc
+                        ? 'mdi-arrow-down'
+                        : 'mdi-arrow-up'
+                      : 'mdi-swap-vertical'
+                  "
+                />
+              </div>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="session in paginatedSessions" :key="session.id">
+          <tr v-for="session in paginatedSessions" :key="session.id" class="table-row">
             <td>
               <v-chip
                 v-if="session.id"
@@ -190,38 +192,141 @@ function formatEUR(n: number) {
             <td>{{ session.date }}</td>
             <td>{{ session.duration }}</td>
             <td>{{ session.agents.join(', ') }}</td>
-            <td>{{ formatEUR(session.cost) }}</td>
+            <td class="cost-cell">{{ formatEUR(session.cost) }}</td>
           </tr>
         </tbody>
       </v-table>
-      <div class="d-flex mt-4 justify-center">
-        <v-pagination v-model="page" :length="pageCount" density="comfortable" />
+      <div class="pagination-wrapper">
+        <v-pagination
+          v-model="page"
+          :length="pageCount"
+          density="comfortable"
+          rounded="circle"
+          :total-visible="5"
+          active-color="primary"
+          class="custom-pagination"
+        />
       </div>
     </v-card-item>
   </v-card>
 </template>
 
 <style scoped lang="scss">
+.sessions-table-card {
+  overflow: hidden;
+}
+
 .sessions-table {
+  border-radius: 8px;
+  overflow: hidden;
+
+  thead {
+    background-color: rgb(var(--v-theme-grey100));
+  }
+
   th {
     color: rgb(var(--v-theme-textSecondary)) !important;
     font-size: 0.8125rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     user-select: none;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 16px 20px !important;
+    border-bottom: 2px solid rgb(var(--v-theme-borderColor)) !important;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgb(var(--v-theme-hoverColor));
+    }
+
+    .th-content {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sort-icon {
+      opacity: 0.6;
+      transition: opacity 0.2s ease;
+    }
+
+    &:hover .sort-icon {
+      opacity: 1;
+    }
+  }
+
+  tbody {
+    tr.table-row {
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background-color: rgb(var(--v-theme-hoverColor));
+      }
+    }
   }
 
   td {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     color: rgb(var(--v-theme-textPrimary));
+    padding: 16px 20px !important;
+    vertical-align: middle;
+
+    &.cost-cell {
+      font-weight: 500;
+      color: rgb(var(--v-theme-success));
+    }
   }
 
   .session-badge {
     font-size: 0.75rem;
     cursor: pointer;
+    font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(var(--v-theme-primary), 0.3);
+    }
+  }
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgb(var(--v-theme-borderColor));
+}
+
+.custom-pagination {
+  :deep(.v-pagination__item) {
+    min-width: 36px;
+    height: 36px;
+    font-weight: 500;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+
+  :deep(.v-pagination__item:hover) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  :deep(.v-pagination__item--is-active) {
+    box-shadow: 0 4px 12px rgba(var(--v-theme-primary), 0.3);
+  }
+
+  :deep(.v-pagination__prev .v-btn),
+  :deep(.v-pagination__next .v-btn) {
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+
+  :deep(.v-pagination__prev .v-btn:hover),
+  :deep(.v-pagination__next .v-btn:hover) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 }
 </style>

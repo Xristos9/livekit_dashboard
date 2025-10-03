@@ -90,7 +90,47 @@
   .pagination {
     display: flex;
     justify-content: center;
-    margin: 1.25rem 0 0;
+    margin: 2rem 0 1rem;
+    padding-top: 1rem;
+
+    .custom-pagination {
+      :deep(.v-pagination__item) {
+        min-width: 40px;
+        height: 40px;
+        font-weight: 500;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+        margin: 0 4px;
+      }
+
+      :deep(.v-pagination__item:hover) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      :deep(.v-pagination__item--is-active) {
+        box-shadow: 0 4px 12px rgba(var(--v-theme-primary), 0.3);
+        font-weight: 600;
+      }
+
+      :deep(.v-pagination__prev .v-btn),
+      :deep(.v-pagination__next .v-btn),
+      :deep(.v-pagination__first .v-btn),
+      :deep(.v-pagination__last .v-btn) {
+        border-radius: 50%;
+        transition: all 0.2s ease;
+        min-width: 40px;
+        height: 40px;
+      }
+
+      :deep(.v-pagination__prev .v-btn:hover),
+      :deep(.v-pagination__next .v-btn:hover),
+      :deep(.v-pagination__first .v-btn:hover),
+      :deep(.v-pagination__last .v-btn:hover) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+    }
   }
 
   .no-records,
