@@ -66,17 +66,17 @@ async function submit() {
 </script>
 
 <template>
-  <v-card elevation="10">
+  <v-card elevation="10" class="registration-form-card">
     <v-card-item>
-      <v-card-title class="text-h5">Register a Customer</v-card-title>
-      <v-card-subtitle>Create new customer accounts with billing defaults.</v-card-subtitle>
+      <v-card-title class="form-title">Register a Customer</v-card-title>
+      <v-card-subtitle class="form-subtitle">Create new customer accounts with billing defaults.</v-card-subtitle>
     </v-card-item>
     <v-card-text>
-      <v-alert type="success" variant="tonal" v-if="successMessage" class="mb-4">
-        {{ successMessage }}
+      <v-alert type="success" variant="tonal" v-if="successMessage" class="mb-4" prominent border="start">
+        <strong>Success!</strong> {{ successMessage }}
       </v-alert>
-      <v-alert type="error" variant="tonal" v-if="errorMessage" class="mb-4">
-        {{ errorMessage }}
+      <v-alert type="error" variant="tonal" v-if="errorMessage" class="mb-4" prominent border="start">
+        <strong>Error!</strong> {{ errorMessage }}
       </v-alert>
       <v-form ref="formRef" @submit.prevent="submit">
         <v-row>
@@ -165,8 +165,8 @@ async function submit() {
             />
           </v-col>
         </v-row>
-        <div class="d-flex mt-4 justify-end">
-          <v-btn color="primary" variant="flat" :loading="loading" type="submit" class="text-none">
+        <div class="form-actions">
+          <v-btn color="primary" size="large" variant="flat" :loading="loading" type="submit" prepend-icon="mdi-account-plus">
             Create Customer
           </v-btn>
         </div>
@@ -174,3 +174,25 @@ async function submit() {
     </v-card-text>
   </v-card>
 </template>
+
+<style scoped lang="scss">
+.registration-form-card {
+  .form-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    padding: 0;
+  }
+
+  .form-subtitle {
+    font-size: 0.875rem;
+    padding: 0;
+    margin-top: 0.25rem;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+  }
+}
+</style>

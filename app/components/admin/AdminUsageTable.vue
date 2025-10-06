@@ -89,24 +89,24 @@ function downloadCsv() {
 </script>
 
 <template>
-  <v-card elevation="10">
+  <v-card elevation="10" class="usage-table-card">
     <v-card-item>
-      <div class="d-flex align-center justify-space-between flex-wrap ga-4">
-        <div>
-          <v-card-title class="text-h5">Customer Usage Details</v-card-title>
-          <v-card-subtitle>Granular metrics for deeper analysis.</v-card-subtitle>
+      <div class="table-header">
+        <div class="header-info">
+          <v-card-title class="table-title">Customer Usage Details</v-card-title>
+          <v-card-subtitle class="table-subtitle">Granular metrics for deeper analysis.</v-card-subtitle>
         </div>
-        <div class="d-flex align-center ga-3">
+        <div class="header-actions">
           <v-text-field
             v-model="search"
-            density="compact"
+            density="comfortable"
             prepend-inner-icon="mdi-magnify"
             variant="outlined"
             hide-details
             placeholder="Search customers"
-            style="max-width: 260px"
+            class="search-field"
           />
-          <v-btn color="primary" variant="flat" class="text-none" :disabled="!filtered.length" @click="downloadCsv">
+          <v-btn color="primary" variant="flat" :disabled="!filtered.length" @click="downloadCsv" prepend-icon="mdi-download">
             Export CSV
           </v-btn>
         </div>
@@ -115,7 +115,7 @@ function downloadCsv() {
     <v-data-table
       :headers="headers"
       :items="filtered"
-      class="elevation-0"
+      class="elevation-0 custom-table"
       :items-per-page="10"
       hover
     >
@@ -146,10 +146,73 @@ function downloadCsv() {
       </template>
       <template #bottom>
         <v-divider />
-        <div class="pa-4 text-caption text-medium-emphasis">
+        <div class="table-footer">
           Showing {{ filtered.length }} of {{ props.customers.length }} customers.
         </div>
       </template>
     </v-data-table>
   </v-card>
 </template>
+
+<style scoped lang="scss">
+.usage-table-card {
+  .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .header-info {
+    .table-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      padding: 0;
+    }
+
+    .table-subtitle {
+      font-size: 0.875rem;
+      padding: 0;
+      margin-top: 0.25rem;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .search-field {
+      min-width: 260px;
+    }
+  }
+
+  .custom-table {
+    :deep(thead) {
+      background-color: rgb(var(--v-theme-grey100));
+
+      th {
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.75rem;
+      }
+    }
+
+    :deep(tbody tr) {
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background-color: rgb(var(--v-theme-hoverColor)) !important;
+      }
+    }
+  }
+
+  .table-footer {
+    padding: 1rem 1.5rem;
+    font-size: 0.875rem;
+    color: rgb(var(--v-theme-textSecondary));
+  }
+}
+</style>

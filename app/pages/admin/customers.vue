@@ -5,15 +5,45 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="d-flex flex-column ga-8">
-    <header class="d-flex flex-column ga-2">
-      <h1 class="text-h4 font-weight-bold">Register a new customer</h1>
-      <p class="text-body-2 text-medium-emphasis">
+  <div class="customers-page">
+    <header class="page-header">
+      <h1 class="page-title">Register New Customer</h1>
+      <p class="page-subtitle">
         Create customer accounts to grant access to the platform. Only administrators can perform
         registrations.
       </p>
     </header>
 
-    <AdminCustomerRegistrationForm class="mt-2" />
+    <div class="form-container">
+      <AdminCustomerRegistrationForm />
+    </div>
   </div>
 </template>
+
+<style scoped lang="scss">
+.customers-page {
+  max-width: 100%;
+  padding: 0;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+
+  .page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: rgb(var(--v-theme-textPrimary));
+    margin-bottom: 0.5rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.875rem;
+    color: rgb(var(--v-theme-textSecondary));
+    max-width: 700px;
+  }
+}
+
+.form-container {
+  max-width: 1000px;
+}
+</style>

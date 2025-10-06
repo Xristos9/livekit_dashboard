@@ -77,16 +77,34 @@ const chartSeries = computed(() => [
 </script>
 
 <template>
-  <v-card elevation="10">
+  <v-card elevation="10" class="chart-card">
     <v-card-item>
-      <v-card-title class="text-h5">Top Customers by Cost</v-card-title>
-      <v-card-subtitle>Comparison of billable cost, OpenAI spend, and profit.</v-card-subtitle>
+      <v-card-title class="chart-title">Top Customers by Cost</v-card-title>
+      <v-card-subtitle class="chart-subtitle">Comparison of billable cost, OpenAI spend, and profit.</v-card-subtitle>
     </v-card-item>
     <v-card-text>
       <div v-if="chartData.categories.length">
         <apexchart type="bar" height="360" :series="chartSeries" :options="chartOptions" />
       </div>
-      <v-alert v-else color="info" variant="tonal">No customer cost data is available.</v-alert>
+      <v-alert v-else color="info" variant="tonal" prominent>No customer cost data is available.</v-alert>
     </v-card-text>
   </v-card>
 </template>
+
+<style scoped lang="scss">
+.chart-card {
+  height: 100%;
+
+  .chart-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    padding: 0;
+  }
+
+  .chart-subtitle {
+    font-size: 0.875rem;
+    padding: 0;
+    margin-top: 0.25rem;
+  }
+}
+</style>

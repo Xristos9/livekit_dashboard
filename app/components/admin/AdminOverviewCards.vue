@@ -67,25 +67,74 @@ const cards = computed(() => {
 </script>
 
 <template>
-  <v-row v-if="cards.length" class="g-4">
+  <v-row v-if="cards.length">
     <v-col v-for="card in cards" :key="card.title" cols="12" md="4">
-      <v-card class="h-100" elevation="2">
+      <v-card class="overview-card" elevation="10">
         <v-card-item>
-          <div class="d-flex align-center justify-space-between">
-            <div>
-              <div class="text-subtitle-1 text-medium-emphasis">{{ card.title }}</div>
-              <div class="text-h5 font-weight-bold mt-2">{{ card.value }}</div>
-              <div class="text-caption text-medium-emphasis mt-1">{{ card.subtitle }}</div>
+          <div class="card-content">
+            <div class="card-info">
+              <div class="card-label">{{ card.title }}</div>
+              <div class="card-value">{{ card.value }}</div>
+              <div class="card-subtitle">{{ card.subtitle }}</div>
             </div>
-            <v-avatar color="primary" size="40">
-              <v-icon :icon="card.icon" color="white"></v-icon>
+            <v-avatar class="card-icon" color="primary" size="56">
+              <v-icon :icon="card.icon" size="28" color="white"></v-icon>
             </v-avatar>
           </div>
         </v-card-item>
       </v-card>
     </v-col>
   </v-row>
-  <v-alert v-else color="warning" variant="tonal">
+  <v-alert v-else color="warning" variant="tonal" prominent>
     No data available for the selected period.
   </v-alert>
 </template>
+
+<style scoped lang="scss">
+.overview-card {
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .card-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .card-info {
+    flex: 1;
+  }
+
+  .card-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgb(var(--v-theme-textSecondary));
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .card-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: rgb(var(--v-theme-textPrimary));
+    margin-top: 0.5rem;
+  }
+
+  .card-subtitle {
+    font-size: 0.75rem;
+    color: rgb(var(--v-theme-textSecondary));
+    margin-top: 0.25rem;
+    line-height: 1.4;
+  }
+
+  .card-icon {
+    flex-shrink: 0;
+  }
+}
+</style>

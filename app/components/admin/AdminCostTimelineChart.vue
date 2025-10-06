@@ -87,16 +87,16 @@ const chartOptions = computed(() => ({
 </script>
 
 <template>
-  <v-card elevation="10">
+  <v-card elevation="10" class="chart-card">
     <v-card-item>
-      <v-card-title class="text-h5">Cost & Profit Trend</v-card-title>
-      <v-card-subtitle>Daily totals for revenue, OpenAI cost, and profit.</v-card-subtitle>
+      <v-card-title class="chart-title">Cost & Profit Trend</v-card-title>
+      <v-card-subtitle class="chart-subtitle">Daily totals for revenue, OpenAI cost, and profit.</v-card-subtitle>
     </v-card-item>
     <v-card-text>
       <div v-if="chartSeries.length">
         <apexchart type="area" height="340" :series="chartSeries" :options="chartOptions" />
       </div>
-      <v-alert v-else color="info" variant="tonal">
+      <v-alert v-else color="info" variant="tonal" prominent>
         No timeline data is available for the selected period.
       </v-alert>
       <v-alert
@@ -104,9 +104,28 @@ const chartOptions = computed(() => ({
         color="warning"
         variant="tonal"
         class="mt-4"
+        prominent
       >
-        OpenAI cost data could not be retrieved. Add an <code>OPENAI_ADMIN_KEY</code> in the environment to see cost and profit insights.
+        <strong>OpenAI cost data unavailable.</strong> Add an <code>OPENAI_ADMIN_KEY</code> in the environment to see cost and profit insights.
       </v-alert>
     </v-card-text>
   </v-card>
 </template>
+
+<style scoped lang="scss">
+.chart-card {
+  height: 100%;
+
+  .chart-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    padding: 0;
+  }
+
+  .chart-subtitle {
+    font-size: 0.875rem;
+    padding: 0;
+    margin-top: 0.25rem;
+  }
+}
+</style>

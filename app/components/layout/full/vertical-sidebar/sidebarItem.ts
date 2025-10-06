@@ -20,23 +20,23 @@ export interface menu {
 const sidebarItem: menu[] = [
   {
     title: 'Dashboard',
-    icon: 'cpu-line-duotone',
+    icon: 'chart-2-line-duotone',
     to: '/dashboard',
   },
   {
     title: 'Recordings',
-    icon: 'planet-3-line-duotone',
+    icon: 'video-frame-play-vertical-line-duotone',
     to: '/recordings',
   },
   {
-    title: 'Admin',
-    icon: 'settings-line-duotone',
+    title: 'Admin Overview',
+    icon: 'chart-line-duotone',
     to: '/admin',
     requiresAdmin: true,
   },
   {
-    title: 'Admin cust',
-    icon: 'settings-line-duotone',
+    title: 'Manage Customers',
+    icon: 'user-plus-rounded-line-duotone',
     to: '/admin/customers',
     requiresAdmin: true,
   },
