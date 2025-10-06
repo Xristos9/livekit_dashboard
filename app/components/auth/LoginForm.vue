@@ -27,7 +27,29 @@ const router = useRouter()
 // })
 
 const login = async () => {
-  router.push('/dashboard')
+  error.value = ''
+  try {
+    const res = await $fetch<{ success: boolean; message?: string; user?: any }>('/api/login', {
+      method: 'POST',
+      credentials: 'include',
+      body: { username: username.value, password: password.value },
+    })
+    if (res.success && res.user) {
+      user.value = res.user
+      // if (checkbox.value) {
+      //   localStorage.setItem('rememberedUsername', username.value)
+      //   localStorage.setItem('userData', JSON.stringify(res.user))
+      // } else {
+      //   localStorage.removeItem('rememberedUsername')
+      //   localStorage.removeItem('userData')
+      // }
+      router.push('/dashboard')
+    } else {
+      error.value = res.message || 'Invalid credentials'
+    }
+  } catch (e: any) {
+    error.value = e?.statusMessage || 'Login failed'
+  }
 }
 </script>
 

@@ -54,25 +54,3 @@ function formatEUR(n: number) {
     </v-col>
   </v-row>
 </template>
-
-<style scoped lang="scss">
-.kpi-card {
-  .kpi-label {
-    color: rgb(var(--v-theme-textSecondary));
-    font-size: 0.75rem;
-    margin-bottom: 0.375rem;
-  }
-
-  .kpi-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: rgb(var(--v-theme-textPrimary));
-    margin-bottom: 0.25rem;
-  }
-
-  .kpi-delta {
-    font-size: 0.75rem;
-    color: rgb(var(--v-theme-success));
-  }
-}
-</style>

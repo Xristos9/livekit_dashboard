@@ -54,6 +54,8 @@ export default defineEventHandler(async (event) => {
       totalSessionDuration: record.fields?.['Total Session Duration (min)'],
       totalCost: record.fields?.['Total Cost'],
       username: record.fields?.Username,
+      role: record.fields?.Role,
+      isAdmin: String(record.fields?.Role || '').toLowerCase() === 'admin',
     }
 
     // store user information in a cookie accessible on client

@@ -11,5 +11,9 @@
 @use './components/VShadow';
 @use './components/VTable';
 @use './components/RecordingCard';
+@use './components/KpiSummaryCards';
+@use './components/SessionTable';
 @use './pages/recordings';
+@use './pages/dashboard';
+@use './pages/landing';
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");

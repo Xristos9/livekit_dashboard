@@ -1,11 +1,40 @@
 <script setup lang="ts">
-import { onMounted, ref, shallowRef, watch } from 'vue'
+import { computed, onMounted, ref, shallowRef, watch, watchEffect } from 'vue'
 defineOptions({ name: 'MainLayout' })
 import { useDisplay } from 'vuetify'
 import sidebarItems from '@/components/layout/full/vertical-sidebar/sidebarItem'
 import { Menu2Icon } from 'vue-tabler-icons'
 
 const sidebarMenu = shallowRef(sidebarItems)
+
+const userCookie = useCookie<unknown>('user')
+const isAdmin = computed(() => {
+  const rawValue = userCookie.value
+  if (!rawValue) return false
+
+  const resolveRole = (value: any) =>
+    value?.isAdmin === true || String(value?.role || '').toLowerCase() === 'admin'
+
+  if (typeof rawValue === 'object') {
+    return resolveRole(rawValue as Record<string, unknown>)
+  }
+
+  if (typeof rawValue === 'string') {
+    try {
+      const parsed = JSON.parse(rawValue)
+      return resolveRole(parsed)
+    } catch (error) {
+      console.error('Failed to parse user cookie for sidebar', error)
+      return false
+    }
+  }
+
+  return false
+})
+
+watchEffect(() => {
+  sidebarMenu.value = sidebarItems.filter((item) => !item.requiresAdmin || isAdmin.value)
+})
 
 const { mdAndDown } = useDisplay()
 const sDrawer = ref(true)

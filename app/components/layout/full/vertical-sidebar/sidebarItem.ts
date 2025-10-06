@@ -3,6 +3,7 @@ export interface menu {
   title?: string
   icon?: any
   to?: string
+  requiresAdmin?: boolean
   chip?: string
   BgColor?: string
   chipBgColor?: string
@@ -26,6 +27,18 @@ const sidebarItem: menu[] = [
     title: 'Recordings',
     icon: 'planet-3-line-duotone',
     to: '/recordings',
+  },
+  {
+    title: 'Admin',
+    icon: 'settings-line-duotone',
+    to: '/admin',
+    requiresAdmin: true,
+  },
+  {
+    title: 'Admin cust',
+    icon: 'settings-line-duotone',
+    to: '/admin/customers',
+    requiresAdmin: true,
   },
 ]
 
